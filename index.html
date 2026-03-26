@@ -1,381 +1,490 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Makower Family Tree — Plock, Poland to Israel, 1760–Present</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,300;1,400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
 <style>
-  * { box-sizing: border-box; }
-  #tree-wrap { overflow: auto; width: 100%; }
-  .nc { cursor: pointer; }
-  .nc:hover rect { opacity: 0.8; }
-  .gl { font-size: 11px; fill: var(--color-text-tertiary,#999); font-family: var(--font-sans,sans-serif); }
-  .tip { position: fixed; background: var(--color-background-secondary,#fff); border: 1px solid var(--color-border-primary,#ccc); border-radius: 8px; padding: 10px 14px; font-size: 13px; font-family: var(--font-sans,sans-serif); color: var(--color-text-primary,#222); pointer-events: none; opacity: 0; transition: opacity 0.15s; max-width: 250px; z-index: 999; box-shadow: 0 2px 8px rgba(0,0,0,0.12); line-height: 1.6; }
-  .tip strong { display: block; margin-bottom: 2px; }
-  .legend-wrap { background: var(--color-background-secondary,#f9f9f9); border-bottom: 1px solid var(--color-border-tertiary,#eee); padding: 8px 12px; }
-  .legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 11px; font-family: var(--font-sans,sans-serif); color: var(--color-text-secondary,#555); align-items: center; margin-bottom: 5px; }
-  .legend2 { display: flex; gap: 12px; flex-wrap: wrap; font-size: 11px; font-family: var(--font-sans,sans-serif); color: var(--color-text-secondary,#555); align-items: center; }
-  .lb { width: 16px; height: 11px; border-radius: 3px; display: inline-block; flex-shrink: 0; }
-  .lline { width: 28px; height: 3px; display: inline-block; border-radius: 2px; flex-shrink: 0; }
-  #fbar { display: flex; gap: 6px; padding: 8px 12px; flex-wrap: wrap; align-items: center; font-size: 12px; font-family: var(--font-sans,sans-serif); color: var(--color-text-secondary,#555); border-bottom: 1px solid var(--color-border-tertiary,#eee); }
-  #fbar button { font-size: 11px; padding: 2px 10px; border-radius: 12px; border: 1px solid var(--color-border-secondary,#ccc); background: transparent; cursor: pointer; color: var(--color-text-secondary,#555); font-family: var(--font-sans,sans-serif); }
-  #fbar button.active { background: var(--color-text-primary,#222); color: var(--color-background-primary,#fff); border-color: transparent; }
+:root{--bg:#faf8f4;--surface:#fff;--surface2:#f5f1ea;--border:#ddd5c4;--border2:#e8e0d0;--text:#1c1a16;--muted:#6b6357;--faint:#a09880;--accent:#2c3e50;--gold:#b5860d;--gold-light:#f0e8d0;--font-d:'Playfair Display',Georgia,serif;--font-b:'Crimson Pro',Georgia,serif;--font-m:'JetBrains Mono',monospace;}
+*{box-sizing:border-box;margin:0;padding:0;}html{scroll-behavior:smooth;}
+body{font-family:var(--font-b);background:var(--bg);color:var(--text);display:flex;flex-direction:column;height:100vh;overflow:hidden;}
+#topnav{background:var(--accent);color:#f0ead6;display:flex;align-items:center;flex-shrink:0;border-bottom:3px solid var(--gold);font-family:var(--font-b);font-size:13px;}
+.brand{padding:10px 20px;font-family:var(--font-d);font-size:17px;font-weight:600;letter-spacing:.3px;border-right:1px solid rgba(255,255,255,.12);white-space:nowrap;}
+.brand span{font-style:italic;font-weight:400;font-size:12px;display:block;color:#c9b99a;margin-top:1px;}
+#topnav nav{display:flex;align-items:center;flex:1;overflow-x:auto;}
+#topnav nav a{padding:12px 16px;color:rgba(240,234,214,.75);text-decoration:none;white-space:nowrap;transition:color .15s,background .15s;border-right:1px solid rgba(255,255,255,.07);font-size:12.5px;}
+#topnav nav a:hover{color:#f0ead6;background:rgba(255,255,255,.07);}
+#topnav nav a.active{color:var(--gold);}
+#app{display:flex;flex:1;overflow:hidden;}
+#main-panel{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;}
+.page{display:none;flex:1;overflow:auto;padding:28px 32px;}
+.page.active{display:block;}
+#tree-page{display:none;flex-direction:column;flex:1;overflow:hidden;}
+#tree-page.active{display:flex;}
+.toolbar{background:var(--surface);border-bottom:1px solid var(--border2);padding:8px 16px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;flex-shrink:0;}
+.toolbar span{font-size:12px;color:var(--muted);}
+.tb{font-size:11.5px;padding:3px 13px;border-radius:14px;border:1px solid var(--border);background:var(--bg);cursor:pointer;font-family:var(--font-b);color:var(--muted);transition:all .14s;}
+.tb:hover{background:var(--border2);}.tb.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+.legend-bar{background:var(--surface);border-bottom:1px solid var(--border2);padding:5px 16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;flex-shrink:0;}
+.leg{display:flex;align-items:center;gap:4px;font-size:10.5px;color:var(--muted);}
+.lb{width:14px;height:9px;border-radius:2px;flex-shrink:0;}
+.lline{width:20px;height:2.5px;border-radius:1px;flex-shrink:0;}
+#tree-wrap{overflow:auto;padding:16px;flex:1;}
+.nc{cursor:pointer;}.nc:hover rect{opacity:.82;}
+.gl{font-size:11px;fill:#b0a898;font-family:'Crimson Pro',serif;}
+/* search */
+#search-page .search-box{display:flex;gap:10px;margin-bottom:16px;align-items:center;}
+#search-input{flex:1;padding:11px 16px;border:1.5px solid var(--border);border-radius:10px;font-family:var(--font-b);font-size:16px;background:var(--surface);color:var(--text);max-width:500px;}
+#search-input:focus{outline:none;border-color:var(--accent);}
+.filter-row{display:flex;gap:7px;margin-bottom:18px;flex-wrap:wrap;align-items:center;}
+.fbtn{padding:4px 13px;border-radius:12px;border:1px solid var(--border);background:var(--bg);font-size:12px;cursor:pointer;font-family:var(--font-b);color:var(--muted);transition:all .13s;}
+.fbtn:hover,.fbtn.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+#search-results{display:grid;grid-template-columns:repeat(auto-fill,minmax(275px,1fr));gap:12px;}
+.rc{background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:13px 15px;cursor:pointer;transition:all .14s;border-left:4px solid transparent;}
+.rc:hover{box-shadow:0 2px 8px rgba(0,0,0,.07);}
+.rc h3{font-family:var(--font-d);font-size:15px;font-weight:600;margin-bottom:4px;}
+.rc .meta{font-size:12.5px;color:var(--muted);line-height:1.7;}
+.rc .btag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:7px;margin-top:6px;color:#fff;}
+.no-res{color:var(--muted);font-style:italic;font-size:15px;padding:20px 0;}
+/* docs */
+.doc-layout{display:grid;grid-template-columns:190px 1fr;gap:32px;max-width:960px;}
+.doc-toc{position:sticky;top:0;}
+.doc-toc h4{font-size:10.5px;text-transform:uppercase;letter-spacing:1.5px;color:var(--faint);margin-bottom:10px;font-weight:500;}
+.doc-toc a{display:block;font-size:13px;color:var(--muted);text-decoration:none;padding:4px 0 4px 10px;border-left:2px solid transparent;margin-left:-10px;transition:all .13s;}
+.doc-toc a:hover,.doc-toc a.active{color:var(--accent);border-left-color:var(--accent);}
+.doc-content section{margin-bottom:38px;scroll-margin-top:20px;}
+.doc-content h2{font-family:var(--font-d);font-size:22px;font-weight:600;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border2);}
+.doc-content h3{font-family:var(--font-d);font-size:16px;font-weight:600;margin:16px 0 7px;}
+.doc-content p{font-size:15.5px;line-height:1.75;color:#2a2620;margin-bottom:10px;}
+.doc-content ul{padding-left:20px;font-size:15px;line-height:1.8;color:#2a2620;}
+.doc-content li{margin-bottom:4px;}
+.source-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:10px;}
+.source-table th{background:var(--surface2);padding:8px 11px;text-align:left;font-weight:500;border:1px solid var(--border2);}
+.source-table td{padding:8px 11px;border:1px solid var(--border2);vertical-align:top;}
+.source-table tr:nth-child(even) td{background:var(--surface2);}
+.note-box{background:var(--gold-light);border-left:4px solid var(--gold);padding:12px 16px;border-radius:0 8px 8px 0;font-size:14px;line-height:1.7;margin:14px 0;}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:11px;margin:14px 0;}
+.stat-box{background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:13px;text-align:center;}
+.stat-box .num{font-family:var(--font-d);font-size:28px;font-weight:700;color:var(--accent);}
+.stat-box .lbl{font-size:11.5px;color:var(--muted);margin-top:2px;}
+
+#tip{position:fixed;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:9px 13px;font-size:13px;font-family:var(--font-b);color:var(--text);pointer-events:none;opacity:0;transition:opacity .15s;max-width:225px;z-index:999;box-shadow:0 3px 10px rgba(0,0,0,.1);line-height:1.6;}
+#tip strong{display:block;margin-bottom:2px;font-family:var(--font-d);}
+::-webkit-scrollbar{width:5px;height:5px;}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
 </style>
-<div id="fbar">
-  <span>Branch:</span>
-  <button class="active" onclick="fb('all',this)">All</button>
-  <button onclick="fb('tanchum',this)">Tanchum</button>
-  <button onclick="fb('baruch',this)">Baruch</button>
-  <button onclick="fb('isaac',this)">Isaac Yacob</button>
-  <button onclick="fb('rachel',this)">Rachel</button>
-  <button onclick="fb('frieda',this)">Frieda</button>
-  <button onclick="fb('zipora',this)">Zipora</button>
-  <button onclick="fb('ester',this)">Ester</button>
+</head>
+<body>
+<div id="topnav">
+  <div class="brand">Makower Family Tree<span>Plock, Poland · 1760–Present</span></div>
+  <nav>
+    <a href="#" class="active" onclick="showPage('tree-page',this);return false;">🌳 Tree</a>
+    <a href="#" onclick="showPage('search-page',this);return false;">🔍 Search</a>
+    <a href="#" onclick="showPage('doc-page',this);return false;">📖 Documentation</a>
+  </nav>
 </div>
-<div class="legend-wrap">
-  <div class="legend">
-    <span style="font-weight:600;color:var(--color-text-primary)">Cards:</span>
-    <span style="display:flex;align-items:center;gap:4px"><span class="lb" style="background:#D6EAF8;border:1.5px solid #3B8BD4"></span>Male, living</span>
-    <span style="display:flex;align-items:center;gap:4px"><span class="lb" style="background:#FAD6EA;border:1.5px solid #D45389"></span>Female, living</span>
-    <span style="display:flex;align-items:center;gap:4px"><span class="lb" style="background:#C8DCF0;border:1.5px solid #1B5E7A"></span>Male, deceased</span>
-    <span style="display:flex;align-items:center;gap:4px"><span class="lb" style="background:#F0C8DC;border:1.5px solid #8B3060"></span>Female, deceased</span>
-    <span style="display:flex;align-items:center;gap:4px"><span class="lb" style="background:#CDD0E8;border:1.5px solid #5B3A8A"></span>Male, Holocaust</span>
-    <span style="display:flex;align-items:center;gap:4px"><span class="lb" style="background:#E8CDD6;border:1.5px solid #8A2040"></span>Female, Holocaust</span>
-  </div>
-  <div class="legend2">
-    <span style="font-weight:600;color:var(--color-text-primary)">Lines:</span>
-    <span style="display:flex;align-items:center;gap:4px"><span class="lline" style="background:#E05A2B"></span>Tanchum branch</span>
-    <span style="display:flex;align-items:center;gap:4px"><span class="lline" style="background:#8B2020"></span>Baruch branch</span>
-    <span style="display:flex;align-items:center;gap:4px"><span class="lline" style="background:#1B7A4E"></span>Isaac Yacob branch</span>
-    <span style="display:flex;align-items:center;gap:4px"><span class="lline" style="background:#C0392B"></span>Rachel branch</span>
-    <span style="display:flex;align-items:center;gap:4px"><span class="lline" style="background:#8E44AD"></span>Frieda branch</span>
-    <span style="display:flex;align-items:center;gap:4px"><span class="lline" style="background:#2471A3"></span>Zipora branch</span>
-    <span style="display:flex;align-items:center;gap:4px"><span class="lline" style="background:#B7950B"></span>Ester branch</span>
-    <span style="display:flex;align-items:center;gap:4px"><span class="lline" style="background:#AAA;border-top:2px dashed #AAA;height:0"></span>Spouse</span>
-    <span style="color:var(--color-text-tertiary,#aaa);font-size:10px;margin-left:4px">Hover for details</span>
+<div id="app">
+  <div id="main-panel">
+    <!-- TREE -->
+    <div id="tree-page" class="active">
+      <div class="toolbar">
+        <span>Branch:</span>
+        <button class="tb active" onclick="fb('all',this)">All</button>
+        <button class="tb" onclick="fb('tanchum',this)">Tanchum</button>
+        <button class="tb" onclick="fb('baruch',this)">Baruch</button>
+        <button class="tb" onclick="fb('isaac',this)">Isaac Yacob</button>
+        <button class="tb" onclick="fb('rachel',this)">Rachel</button>
+        <button class="tb" onclick="fb('frieda',this)">Frieda</button>
+        <button class="tb" onclick="fb('zipora',this)">Zipora</button>
+        <button class="tb" onclick="fb('ester',this)">Ester</button>
+        
+      </div>
+      <div class="legend-bar">
+        <span class="leg"><span class="lb" style="background:#D6EAF8;border:1.5px solid #3B8BD4"></span>Male, living</span>
+        <span class="leg"><span class="lb" style="background:#FAD6EA;border:1.5px solid #D45389"></span>Female, living</span>
+        <span class="leg"><span class="lb" style="background:#C8DCF0;border:1.5px solid #1B5E7A"></span>Male, deceased</span>
+        <span class="leg"><span class="lb" style="background:#F0C8DC;border:1.5px solid #8B3060"></span>Female, deceased</span>
+        <span class="leg"><span class="lb" style="background:#CDD0E8;border:1.5px solid #5B3A8A"></span>Holocaust ♂</span>
+        <span class="leg"><span class="lb" style="background:#E8CDD6;border:1.5px solid #8A2040"></span>Holocaust ♀</span>
+        <span class="leg" style="margin-left:8px"><span class="lline" style="background:#E05A2B"></span>Tanchum</span>
+        <span class="leg"><span class="lline" style="background:#1B7A4E"></span>Isaac Yacob</span>
+        <span class="leg"><span class="lline" style="background:#8B2020"></span>Baruch</span>
+        <span class="leg"><span class="lline" style="background:#C0392B"></span>Rachel</span>
+        <span class="leg"><span class="lline" style="background:#8E44AD"></span>Frieda</span>
+        <span class="leg"><span class="lline" style="background:#2471A3"></span>Zipora</span>
+        <span class="leg"><span class="lline" style="background:#B7950B"></span>Ester</span>
+        <span class="leg" style="margin-left:4px"><span style="display:inline-block;width:20px;border-top:2px dashed #aaa;vertical-align:middle"></span>Spouse</span>
+      </div>
+      <div id="tree-wrap"></div>
+    </div>
+    <!-- SEARCH -->
+    <div id="search-page" class="page">
+      <h2 style="font-family:var(--font-d);font-size:24px;margin-bottom:16px;">Search Family Members</h2>
+      <div class="search-box">
+        <input type="text" id="search-input" placeholder="Search by name, location, birth year…" oninput="doSearch()">
+        <span id="search-count" style="color:var(--muted);font-size:13px;white-space:nowrap;"></span>
+      </div>
+      <div class="filter-row">
+        <span style="font-size:12px;color:var(--muted);margin-right:2px;">Filter:</span>
+        <button class="fbtn active" onclick="setFilter('all',this)">All</button>
+        <button class="fbtn" onclick="setFilter('living',this)">Living</button>
+        <button class="fbtn" onclick="setFilter('deceased',this)">Deceased</button>
+        <button class="fbtn" onclick="setFilter('holocaust',this)">Holocaust victims</button>
+        <button class="fbtn" onclick="setFilter('israel',this)">Israel</button>
+        <button class="fbtn" onclick="setFilter('outside',this)">Outside Israel</button>
+        <button class="fbtn" onclick="setFilter('M',this)">Male</button>
+        <button class="fbtn" onclick="setFilter('F',this)">Female</button>
+      </div>
+      <div id="search-results"></div>
+    </div>
+    <!-- DOCUMENTATION -->
+    <div id="doc-page" class="page">
+      <div class="doc-layout">
+        <div class="doc-toc">
+          <h4>Contents</h4>
+          <a href="#doc-intro" onclick="hToc(this)">Introduction</a>
+          <a href="#doc-stats" onclick="hToc(this)">Family Statistics</a>
+          <a href="#doc-structure" onclick="hToc(this)">Tree Structure</a>
+          <a href="#doc-conventions" onclick="hToc(this)">Naming Conventions</a>
+          <a href="#doc-sources" onclick="hToc(this)">Source Citations</a>
+          <a href="#doc-holocaust" onclick="hToc(this)">Holocaust Notes</a>
+          <a href="#doc-branches" onclick="hToc(this)">Branch Guide</a>
+          <a href="#doc-changelog" onclick="hToc(this)">Changelog</a>
+        </div>
+        <div class="doc-content">
+          <section id="doc-intro">
+            <h2>Introduction</h2>
+            <p>This document presents the genealogical record of the <strong>Makower family</strong>, tracing the lineage from <strong>Dawid Makower</strong> (born circa 1760, Plock, Poland) through eight generations to the present day. The family's story spans the full arc of modern Jewish history — from 19th-century Poland, through the devastation of the Holocaust, to the establishment of the State of Israel, and today to communities in Tel Aviv, Toronto, and New Jersey.</p>
+            <p>This tree was compiled from cemetery records, JRI-Poland vital records, Yad Vashem Pages of Testimony, and living family members. Approximate dates are indicated with a tilde (~).</p>
+            <div class="note-box"><strong>A note on completeness:</strong> Some individuals have limited information, particularly married-in spouses in earlier generations and individuals lost in the Holocaust. Gaps represent missing records, not missing people. Contributions from family members are always welcome.</div>
+          </section>
+          <section id="doc-stats">
+            <h2>Family Statistics</h2>
+            <div class="stat-grid" id="stat-grid"></div>
+          </section>
+          <section id="doc-structure">
+            <h2>Tree Structure</h2>
+            <p>The tree is organized into <strong>eight generations</strong> (Gen 1–8):</p>
+            <ul>
+              <li><strong>Generation 1</strong> — Dawid Makower &amp; Rachel (c. 1760–1771, Plock). Earliest known ancestors.</li>
+              <li><strong>Generation 2</strong> — Tanchum Makower &amp; Zelda (c. 1823–1830, Plock).</li>
+              <li><strong>Generation 3</strong> — David Makower &amp; Hadasa Schwarzberg (c. 1865–1870, Plock). The pivotal generation from whom all modern branches descend.</li>
+              <li><strong>Generation 4</strong> — David and Hadasa's eight children, each founding a distinct branch: Tanchum, Isaac Yacob, Baruch, Rachel, Yosef, Frieda, Zipora, and Ester.</li>
+              <li><strong>Generations 5–8</strong> — Descendants primarily in Israel, with branches in South Africa, Toronto (Canada), and New Jersey (USA).</li>
+            </ul>
+          </section>
+          <section id="doc-conventions">
+            <h2>Naming Conventions &amp; Date Formatting</h2>
+            <h3>Names</h3>
+            <p>Full names are used throughout. Where a person is known by both a Hebrew and a secular name (e.g., Hadassah/Ada Makower), both are recorded as <em>Full Name (Common Name)</em>.</p>
+            <h3>Dates</h3>
+            <p>Birth and death years are four-digit years (e.g., <strong>1933</strong>). Approximate years carry a tilde prefix: <strong>~1925</strong>. Deaths in the Holocaust are recorded as <strong>"Holocaust"</strong> rather than a specific year, reflecting uncertainty and the nature of those deaths.</p>
+            <h3>Locations</h3>
+            <p>Locations follow the format <em>City, Country</em> using modern country names (e.g., <strong>Plock, Poland</strong>; <strong>Kfar-Hess, Israel</strong>; <strong>Toronto, Canada</strong>; <strong>New Jersey, USA</strong>).</p>
+          </section>
+          <section id="doc-sources">
+            <h2>Source Citations</h2>
+            <table class="source-table">
+              <tr><th>Source</th><th>Details</th><th>Records</th></tr>
+              <tr><td>JRI-Poland (JRI-PL)</td><td>Film 1201497, 1866, Birth #219</td><td>David Makower birth</td></tr>
+              <tr><td>Kfar-Hess Cemetery</td><td>Kfar-Hess, Israel</td><td>Tanchum, Gila, Zipora, Tanchum Yakobi, Frieda, Yoseph Kinamon, Yigal Makower</td></tr>
+              <tr><td>Beer-Sheva Cemetery</td><td>Beer-Sheva, Israel</td><td>Alexander Makower, Rachel Laska</td></tr>
+              <tr><td>Einat Cemetery</td><td>Einat, Israel</td><td>Ester Makower Ben-Yishai, Ezriel Ben-Yishai</td></tr>
+              <tr><td>Yad Vashem — Pages of Testimony</td><td>Holocaust memorial records</td><td>Baruch (#356496), Isaac Yacob (#4011393), Hinda Koral (#4011391, #5337876), Rachel (#324125), Hadassah Ada (#1041900, #4011390)</td></tr>
+              <tr><td>IDF Memorial</td><td>Israeli Defence Forces records</td><td>Uri Kinamon — killed 20 September 1956, Amatzya</td></tr>
+              <tr><td>kehati.co.il/makower</td><td>Online family tree — primary source</td><td>All records</td></tr>
+            </table>
+          </section>
+          <section id="doc-holocaust">
+            <h2>Holocaust Notes</h2>
+            <div class="note-box">This section addresses family members who perished in the Holocaust, presented with care and respect for their memory.</div>
+            <p>The Holocaust devastated the Makower family. Of David and Hadasa's eight children, at least four branches were entirely destroyed. The following ten family members are confirmed victims:</p>
+            <ul>
+              <li><strong>Isaac Yacob Makower</strong> (b. 1890) — Lubic, Poland</li>
+              <li><strong>Hinda Koral</strong> (b. 1895, wife of Isaac Yacob)</li>
+              <li><strong>Hadassah (Ada) Makower</strong> (b. ~1925, daughter of Isaac Yacob) — Babi-Yar, Ukraine, 1941</li>
+              <li><strong>Baruch Makower</strong> (b. 1894) — Warsaw, 1942</li>
+              <li><strong>Lea Lichtenstein</strong> (b. 1905, wife of Baruch)</li>
+              <li><strong>Hadassah Makower</strong> (b. 1926, daughter of Baruch) — Warsaw, 1942, age 16</li>
+              <li><strong>Bracha Makower</strong> (b. 1931, daughter of Baruch) — Warsaw, 1942, age 11</li>
+              <li><strong>Rachel Makower</strong> (b. 1904) — Warsaw, 1942</li>
+              <li><strong>Yitschak Berenstein</strong> (b. 1905, husband of Rachel)</li>
+              <li><strong>Hadassah Berenstein</strong> (b. ~1932, daughter of Rachel) — Warsaw, 1942, age ~10</li>
+            </ul>
+            <p><strong>Alexander Makower</strong> (b. 1923, son of Isaac Yacob) survived and emigrated to Israel, passing away in Beer-Sheva in 2005.</p>
+          </section>
+          <section id="doc-branches">
+            <h2>Branch Guide</h2>
+            <ul>
+              <li><span style="color:#E05A2B;font-weight:600">■ Tanchum branch</span> — Kfar-Hess, Israel. Yigal Makower and family.</li>
+              <li><span style="color:#1B7A4E;font-weight:600">■ Isaac Yacob branch</span> — Survived through Alexander Makower. Large branch: Beer-Sheva, Caesarea, Macabim, Tel Aviv, Toronto, New Jersey.</li>
+              <li><span style="color:#8B2020;font-weight:600">■ Baruch branch</span> — Entirely lost in the Holocaust. No surviving descendants.</li>
+              <li><span style="color:#C0392B;font-weight:600">■ Rachel branch</span> — Entirely lost in the Holocaust. No surviving descendants.</li>
+              <li><span style="color:#8E44AD;font-weight:600">■ Frieda branch</span> — Holon, Israel. Son Uri Kinamon killed in IDF service, 1956.</li>
+              <li><span style="color:#2471A3;font-weight:600">■ Zipora branch</span> — Kfar-Hess, Israel. Yakoby family descendants.</li>
+              <li><span style="color:#B7950B;font-weight:600">■ Ester branch</span> — Einat, Israel. Ben-Yishai family descendants.</li>
+              <li><span style="color:#7D6608;font-weight:600">■ Yosef branch</span> — No known descendants recorded.</li>
+            </ul>
+          </section>
+          <section id="doc-changelog">
+            <h2>Changelog</h2>
+            <ul>
+              <li><strong>2026</strong> — Interactive digital version created. Added Generations 1–2. Corrected all parent IDs. Added Generation 8 members. Standardized all names, dates, and locations. Added search, navigation, and AI assistant.</li>
+              <li><strong>2015</strong> — Original source data published at kehati.co.il/makower.</li>
+            </ul>
+          </section>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
-<div id="tree-wrap"></div>
-<div class="tip" id="tip"></div>
+<div id="tip"></div>
 <script>
-const P = [
-  {id:'dawid',       n:'Dawid Makower',          b:'1760',  d:'1856',      l:'Plock, Poland',        g:'M', gen:1, p1:'',          p2:'',           sp:'rachel_f'  },
-  {id:'rachel_f',    n:'Rachel Makower',          b:'1771',  d:'1873',      l:'Plock, Poland',        g:'F', gen:1, p1:'',          p2:'',           sp:'dawid'     },
-  {id:'tanchum_f',   n:'Tanchum Makower',         b:'1823',  d:'1882',      l:'Plock, Poland',        g:'M', gen:2, p1:'dawid',     p2:'rachel_f',   sp:'zelda'     },
-  {id:'zelda',       n:'Zelda Makower',            b:'1830',  d:'',          l:'Plock, Poland',        g:'F', gen:2, p1:'',          p2:'',           sp:'tanchum_f' },
-  {id:'david',       n:'David Makower',            b:'1865',  d:'1937',      l:'Plock, Poland',        g:'M', gen:3, p1:'tanchum_f', p2:'zelda',      sp:'hadasa'    },
-  {id:'hadasa',      n:'Hadasa Schwarzberg',       b:'1870',  d:'',          l:'Plock, Poland',        g:'F', gen:3, p1:'',          p2:'',           sp:'david'     },
-  {id:'tanchum',     n:'Tanchum Makower',          b:'1894',  d:'1978',      l:'Kfar-Hess, Israel',   g:'M', gen:4, p1:'david',     p2:'hadasa',     sp:'gila'      },
-  {id:'gila',        n:'Gila Margalit',            b:'1896',  d:'1977',      l:'Kfar-Hess, Israel',   g:'F', gen:4, p1:'',          p2:'',           sp:'tanchum'   },
-  {id:'isaac_y',     n:'Isaac Yacob Makower',      b:'1890',  d:'Holocaust', l:'Lubic, Poland',        g:'M', gen:4, p1:'david',     p2:'hadasa',     sp:'hinda'     },
-  {id:'hinda',       n:'Hinda Koral',              b:'1895',  d:'Holocaust', l:'Bukowiec, Poland',     g:'F', gen:4, p1:'',          p2:'',           sp:'isaac_y'   },
-  {id:'baruch',      n:'Baruch Makower',           b:'1894',  d:'1942',      l:'Warsaw, Poland',       g:'M', gen:4, p1:'david',     p2:'hadasa',     sp:'lea'       },
-  {id:'lea',         n:'Lea Lichtenstein',         b:'1905',  d:'Holocaust', l:'Chorzele, Poland',     g:'F', gen:4, p1:'',          p2:'',           sp:'baruch'    },
-  {id:'rachel_r',    n:'Rachel Makower',           b:'1904',  d:'1942',      l:'Warsaw, Poland',       g:'F', gen:4, p1:'david',     p2:'hadasa',     sp:'yitschak_b'},
-  {id:'yitschak_b',  n:'Yitschak Berenstein',      b:'1905',  d:'Holocaust', l:'Warsaw, Poland',       g:'M', gen:4, p1:'',          p2:'',           sp:'rachel_r'  },
-  {id:'yosef',       n:'Yosef Makower',            b:'',      d:'',          l:'Plock, Poland',        g:'M', gen:4, p1:'david',     p2:'hadasa',     sp:''          },
-  {id:'frieda',      n:'Frieda Makower',           b:'1905',  d:'1996',      l:'Holon, Israel',        g:'F', gen:4, p1:'david',     p2:'hadasa',     sp:'yoseph_k'  },
-  {id:'yoseph_k',    n:'Yoseph Kinamon',           b:'1908',  d:'2004',      l:'Holon, Israel',        g:'M', gen:4, p1:'',          p2:'',           sp:'frieda'    },
-  {id:'zipora',      n:'Zipora Makower',           b:'1905',  d:'1981',      l:'Kfar-Hess, Israel',   g:'F', gen:4, p1:'david',     p2:'hadasa',     sp:'tanchum_y' },
-  {id:'tanchum_y',   n:'Tanchum Yakobi',           b:'1888',  d:'1960',      l:'Kfar-Hess, Israel',   g:'M', gen:4, p1:'',          p2:'',           sp:'zipora'    },
-  {id:'ester_m',     n:'Ester Makower',            b:'1903',  d:'1994',      l:'Einat, Israel',        g:'F', gen:4, p1:'david',     p2:'hadasa',     sp:'ezriel'    },
-  {id:'ezriel',      n:'Ezriel Ben-Yishai',        b:'1909',  d:'1987',      l:'Einat, Israel',        g:'M', gen:4, p1:'',          p2:'',           sp:'ester_m'   },
-  {id:'yigal',       n:'Yigal Makower',            b:'1933',  d:'2008',      l:'Kfar-Hess, Israel',   g:'M', gen:5, p1:'tanchum',   p2:'gila',       sp:'naomi'     },
-  {id:'naomi',       n:'Naomi Sheetenberg',        b:'1937',  d:'',          l:'Kfar-Hess, Israel',   g:'F', gen:5, p1:'',          p2:'',           sp:'yigal'     },
-  {id:'alexander',   n:'Alexander Makower',        b:'1923',  d:'2005',      l:'Beer-Sheva, Israel',  g:'M', gen:5, p1:'isaac_y',   p2:'hinda',      sp:'rachel_l'  },
-  {id:'rachel_l',    n:'Rachel Laska',             b:'1924',  d:'1998',      l:'Beer-Sheva, Israel',  g:'F', gen:5, p1:'',          p2:'',           sp:'alexander' },
-  {id:'ada',         n:'Hadassah (Ada) Makower',   b:'~1925', d:'1941',      l:'Babi-Yar, Ukraine',   g:'F', gen:5, p1:'isaac_y',   p2:'hinda',      sp:''          },
-  {id:'hadassah_b',  n:'Hadassah Makower',         b:'1926',  d:'1942',      l:'Warsaw (Holocaust)',  g:'F', gen:5, p1:'baruch',    p2:'lea',        sp:''          },
-  {id:'bracha',      n:'Bracha Makower',           b:'1931',  d:'1942',      l:'Warsaw (Holocaust)',  g:'F', gen:5, p1:'baruch',    p2:'lea',        sp:''          },
-  {id:'hadassah_ber',n:'Hadassah Berenstein',      b:'~1932', d:'1942',      l:'Warsaw, Poland',      g:'F', gen:5, p1:'rachel_r',  p2:'yitschak_b', sp:''          },
-  {id:'uri_k',       n:'Uri Kinamon',              b:'1935',  d:'1956',      l:'Amatzya, Israel',     g:'M', gen:5, p1:'frieda',    p2:'yoseph_k',   sp:''          },
-  {id:'menachem',    n:'Menachem Yakoby',          b:'1930',  d:'',          l:'Kfar-Hess, Israel',   g:'M', gen:5, p1:'zipora',    p2:'tanchum_y',  sp:'tamar_f'   },
-  {id:'tamar_f',     n:'Tamar Friedman',           b:'1936',  d:'',          l:'Kfar-Hess, Israel',   g:'F', gen:5, p1:'',          p2:'',           sp:'menachem'  },
-  {id:'david_y',     n:'David Yakoby',             b:'1940',  d:'',          l:'Kfar-Hess, Israel',   g:'M', gen:5, p1:'zipora',    p2:'tanchum_y',  sp:'ester_z'   },
-  {id:'ester_z',     n:'Ester Zur',                b:'1947',  d:'',          l:'Kfar-Hess, Israel',   g:'F', gen:5, p1:'',          p2:'',           sp:'david_y'   },
-  {id:'yacob_by',    n:'Yacob Ben-Yishai',         b:'1946',  d:'',          l:'Einat, Israel',       g:'M', gen:5, p1:'ester_m',   p2:'ezriel',     sp:'nirit'     },
-  {id:'nirit',       n:'Nirit Hagari',             b:'1946',  d:'',          l:'Einat, Israel',       g:'F', gen:5, p1:'',          p2:'',           sp:'yacob_by'  },
-  {id:'orit',        n:'Orit Makower',             b:'1961',  d:'',          l:'Kfar-Hess, Israel',   g:'F', gen:6, p1:'yigal',     p2:'naomi',      sp:'yitzchak_f'},
-  {id:'yitzchak_f',  n:'Yitzchak Felman',          b:'1960',  d:'',          l:'Israel',              g:'M', gen:6, p1:'',          p2:'',           sp:'orit'      },
-  {id:'ofer',        n:'Ofer Makower',             b:'1963',  d:'',          l:'Gan-Yoshaya, Israel', g:'M', gen:6, p1:'yigal',     p2:'naomi',      sp:'carmen'    },
-  {id:'carmen',      n:'Carmen Deville',           b:'1971',  d:'',          l:'South Africa',        g:'F', gen:6, p1:'',          p2:'',           sp:'ofer'      },
-  {id:'nizan',       n:'Nizan Makower',            b:'1970',  d:'',          l:'Kfar-Hess, Israel',   g:'M', gen:6, p1:'yigal',     p2:'naomi',      sp:'efrat'     },
-  {id:'efrat',       n:'Efrat Parnas',             b:'1971',  d:'',          l:'Israel',              g:'F', gen:6, p1:'',          p2:'',           sp:'nizan'     },
-  {id:'amir_m',      n:'Amir Makower',             b:'1948',  d:'',          l:'Caesarea, Israel',    g:'M', gen:6, p1:'alexander', p2:'rachel_l',   sp:'adina'     },
-  {id:'adina',       n:'Adina',                    b:'',      d:'',          l:'Israel',              g:'F', gen:6, p1:'',          p2:'',           sp:'amir_m'    },
-  {id:'yacob_m',     n:'Yacob Makower',            b:'1949',  d:'',          l:'Macabim, Israel',     g:'M', gen:6, p1:'alexander', p2:'rachel_l',   sp:'ofra'      },
-  {id:'ofra',        n:'Ofra Zur',                 b:'',      d:'',          l:'Israel',              g:'F', gen:6, p1:'',          p2:'',           sp:'yacob_m'   },
-  {id:'ilan',        n:'Ilan Makower',             b:'1956',  d:'',          l:'Sde-Boker, Israel',   g:'M', gen:6, p1:'alexander', p2:'rachel_l',   sp:'vardit'    },
-  {id:'vardit',      n:'Vardit Vardimon',          b:'',      d:'',          l:'Israel',              g:'F', gen:6, p1:'',          p2:'',           sp:'ilan'      },
-  {id:'uri_ya',      n:'Uri Yakoby',               b:'1959',  d:'',          l:'Kfar-Hess, Israel',   g:'M', gen:6, p1:'menachem',  p2:'tamar_f',    sp:'esther_p'  },
-  {id:'esther_p',    n:'Esther Porat',             b:'1960',  d:'',          l:'Israel',              g:'F', gen:6, p1:'',          p2:'',           sp:'uri_ya'    },
-  {id:'einat',       n:'Einat Yakoby',             b:'1964',  d:'',          l:'Kfar-Hess, Israel',   g:'F', gen:6, p1:'menachem',  p2:'tamar_f',    sp:'hadar'     },
-  {id:'hadar',       n:'Hadar Sharan',             b:'1964',  d:'',          l:'Israel',              g:'M', gen:6, p1:'',          p2:'',           sp:'einat'     },
-  {id:'dana',        n:'Dana Yakoby',              b:'1970',  d:'',          l:'Kfar-Hess, Israel',   g:'F', gen:6, p1:'menachem',  p2:'tamar_f',    sp:'amir_l'    },
-  {id:'amir_l',      n:'Amir Levi',                b:'1968',  d:'',          l:'Israel',              g:'M', gen:6, p1:'',          p2:'',           sp:'dana'      },
-  {id:'osnat',       n:'Osnat Yakoby',             b:'1973',  d:'',          l:'Kfar-Hess, Israel',   g:'F', gen:6, p1:'david_y',   p2:'ester_z',    sp:''          },
-  {id:'ayelet',      n:'Ayelet Yakoby',            b:'1975',  d:'',          l:'Kfar-Hess, Israel',   g:'F', gen:6, p1:'david_y',   p2:'ester_z',    sp:''          },
-  {id:'yiftach',     n:'Yiftach Yakoby',           b:'1978',  d:'',          l:'Kfar-Hess, Israel',   g:'M', gen:6, p1:'david_y',   p2:'ester_z',    sp:''          },
-  {id:'ravit',       n:'Ravit Ben-Yishai',         b:'1969',  d:'',          l:'Timurim, Israel',     g:'F', gen:6, p1:'yacob_by',  p2:'nirit',      sp:'arik'      },
-  {id:'arik',        n:'Arik Schreiber',           b:'',      d:'',          l:'Israel',              g:'M', gen:6, p1:'',          p2:'',           sp:'ravit'     },
-  {id:'limor',       n:'Limor Ben-Yishai',         b:'1974',  d:'',          l:'Israel',              g:'F', gen:6, p1:'yacob_by',  p2:'nirit',      sp:'nir'       },
-  {id:'nir',         n:'Nir Tamir',                b:'',      d:'',          l:'Israel',              g:'M', gen:6, p1:'',          p2:'',           sp:'limor'     },
-  {id:'offer',       n:'Offer Ben-Yishai',         b:'1979',  d:'',          l:'Israel',              g:'M', gen:6, p1:'yacob_by',  p2:'nirit',      sp:''          },
-  {id:'sagi',        n:'Sagi Ben-Yishai',          b:'1982',  d:'',          l:'Israel',              g:'M', gen:6, p1:'yacob_by',  p2:'nirit',      sp:''          },
-  {id:'dolev',       n:'Dolev Felman',             b:'1990',  d:'',          l:'Israel',              g:'M', gen:7, p1:'orit',      p2:'yitzchak_f', sp:''          },
-  {id:'nofar',       n:'Nofar Makower',            b:'1988',  d:'',          l:'Israel',              g:'F', gen:7, p1:'ofer',      p2:'carmen',     sp:''          },
-  {id:'gil',         n:'Gil Makower',              b:'1999',  d:'',          l:'Israel',              g:'M', gen:7, p1:'ofer',      p2:'carmen',     sp:''          },
-  {id:'daniel',      n:'Daniel Makower',           b:'2006',  d:'',          l:'Israel',              g:'M', gen:7, p1:'ofer',      p2:'carmen',     sp:''          },
-  {id:'tal_y',       n:'Tal Yonathan Makower',     b:'2007',  d:'',          l:'Israel',              g:'M', gen:7, p1:'ofer',      p2:'carmen',     sp:''          },
-  {id:'noah',        n:"No'ah Makower",            b:'2000',  d:'',          l:'Israel',              g:'M', gen:7, p1:'nizan',     p2:'efrat',      sp:''          },
-  {id:'maya',        n:'Maya Makower',             b:'2004',  d:'',          l:'Israel',              g:'F', gen:7, p1:'nizan',     p2:'efrat',      sp:''          },
-  {id:'tal_m',       n:'Tal Makower',              b:'1975',  d:'',          l:'Israel',              g:'M', gen:7, p1:'amir_m',    p2:'adina',      sp:''          },
-  {id:'yaniv',       n:'Yaniv Makower',            b:'1978',  d:'',          l:'Israel',              g:'M', gen:7, p1:'amir_m',    p2:'adina',      sp:''          },
-  {id:'eyal',        n:'Eyal Makower',             b:'1988',  d:'',          l:'Israel',              g:'M', gen:7, p1:'amir_m',    p2:'adina',      sp:''          },
-  {id:'uri_m',       n:'Uri Makower',              b:'1975',  d:'',          l:'Israel',              g:'M', gen:7, p1:'yacob_m',   p2:'ofra',       sp:'hagar'     },
-  {id:'hagar',       n:'Hagar Barber',             b:'1978',  d:'',          l:'Israel',              g:'F', gen:7, p1:'',          p2:'',           sp:'uri_m'     },
-  {id:'tamar_m',     n:'Tamar Makower',            b:'1975',  d:'',          l:'Magal, Israel',       g:'F', gen:7, p1:'yacob_m',   p2:'ofra',       sp:'gal'       },
-  {id:'gal',         n:'Gal Zohar',                b:'1974',  d:'',          l:'Israel',              g:'M', gen:7, p1:'',          p2:'',           sp:'tamar_m'   },
-  {id:'omri',        n:'Omri Makower',             b:'1980',  d:'',          l:'Tel-Aviv, Israel',    g:'M', gen:7, p1:'yacob_m',   p2:'ofra',       sp:'shawna'    },
-  {id:'shawna',      n:'Shawna Noy',               b:'1983',  d:'',          l:'Toronto',             g:'F', gen:7, p1:'',          p2:'',           sp:'omri'      },
-  {id:'yuval',       n:'Yuval Makower',            b:'1985',  d:'',          l:'Israel',              g:'M', gen:7, p1:'yacob_m',   p2:'ofra',       sp:'tair'      },
-  {id:'tair',        n:'Tair Segal',               b:'1985',  d:'',          l:'Israel',              g:'F', gen:7, p1:'',          p2:'',           sp:'yuval'     },
-  {id:'ori_m',       n:'Ori Makower',              b:'1985',  d:'',          l:'Israel',              g:'M', gen:7, p1:'ilan',      p2:'vardit',     sp:''          },
-  {id:'eran',        n:'Eran Makower',             b:'1990',  d:'',          l:'Israel',              g:'M', gen:7, p1:'ilan',      p2:'vardit',     sp:''          },
-  {id:'nadav',       n:'Nadav Yakoby',             b:'1992',  d:'',          l:'Israel',              g:'M', gen:7, p1:'uri_ya',    p2:'esther_p',   sp:''          },
-  {id:'reut',        n:"Re'ut Yakoby",             b:'1993',  d:'',          l:'Israel',              g:'F', gen:7, p1:'uri_ya',    p2:'esther_p',   sp:''          },
-  {id:'yoav',        n:'Yoav Yakoby',              b:'1995',  d:'',          l:'Israel',              g:'M', gen:7, p1:'uri_ya',    p2:'esther_p',   sp:''          },
-  {id:'bar',         n:'Bar Sharan',               b:'1995',  d:'',          l:'Israel',              g:'M', gen:7, p1:'einat',     p2:'hadar',      sp:''          },
-  {id:'noy',         n:'Noy Sharan',               b:'1995',  d:'',          l:'Israel',              g:'F', gen:7, p1:'einat',     p2:'hadar',      sp:''          },
-  {id:'maylee',      n:'Maylee Sharan',            b:'2001',  d:'',          l:'Israel',              g:'F', gen:7, p1:'einat',     p2:'hadar',      sp:''          },
-  {id:'ilay',        n:'Ilay Levi',                b:'1997',  d:'',          l:'Israel',              g:'M', gen:7, p1:'dana',      p2:'amir_l',     sp:''          },
-  {id:'tuval',       n:'Tuval Levi',               b:'2001',  d:'',          l:'Israel',              g:'M', gen:7, p1:'dana',      p2:'amir_l',     sp:''          },
-  {id:'shira',       n:'Shira Makower',            b:'2007',  d:'',          l:'Israel',              g:'F', gen:8, p1:'uri_m',     p2:'hagar',      sp:''          },
-  {id:'alon',        n:'Alon Makower',             b:'2009',  d:'',          l:'Israel',              g:'M', gen:8, p1:'uri_m',     p2:'hagar',      sp:''          },
-  {id:'rony',        n:'Rony Makower',             b:'2013',  d:'',          l:'Israel',              g:'F', gen:8, p1:'uri_m',     p2:'hagar',      sp:''          },
-  {id:'yotam',       n:'Yotam Makower',            b:'2015',  d:'',          l:'Israel',              g:'M', gen:8, p1:'uri_m',     p2:'hagar',      sp:''          },
-  {id:'omer',        n:'Omer Zohar',               b:'2006',  d:'',          l:'Magal, Israel',       g:'M', gen:8, p1:'tamar_m',   p2:'gal',        sp:''          },
-  {id:'yaara',       n:'Yaara Zohar',              b:'2008',  d:'',          l:'Magal, Israel',       g:'F', gen:8, p1:'tamar_m',   p2:'gal',        sp:''          },
-  {id:'roy',         n:'Roy Zohar',                b:'2011',  d:'',          l:'Magal, Israel',       g:'M', gen:8, p1:'tamar_m',   p2:'gal',        sp:''          },
-  {id:'avigail',     n:'Avigail Makower',          b:'2013',  d:'',          l:'Toronto',             g:'F', gen:8, p1:'omri',      p2:'shawna',     sp:''          },
-  {id:'adele',       n:'Adele Makower',            b:'2024',  d:'',          l:'Toronto',             g:'F', gen:8, p1:'omri',      p2:'shawna',     sp:''          },
-  {id:'itay',        n:'Itay Makower',             b:'2019',  d:'',          l:'New Jersey',          g:'M', gen:8, p1:'yuval',     p2:'tair',       sp:''          },
-  {id:'ilan_l',      n:'Ilan Makower',             b:'2022',  d:'',          l:'New Jersey',          g:'M', gen:8, p1:'yuval',     p2:'tair',       sp:''          },
+const P=[
+  {id:'dawid',n:'Dawid Makower',b:'1760',d:'1856',l:'Plock, Poland',g:'M',gen:1,p1:'',p2:'',sp:'rachel_f'},
+  {id:'rachel_f',n:'Rachel Makower',b:'1771',d:'1873',l:'Plock, Poland',g:'F',gen:1,p1:'',p2:'',sp:'dawid'},
+  {id:'tanchum_f',n:'Tanchum Makower',b:'1823',d:'1882',l:'Plock, Poland',g:'M',gen:2,p1:'dawid',p2:'rachel_f',sp:'zelda'},
+  {id:'zelda',n:'Zelda Makower',b:'1830',d:'',l:'Plock, Poland',g:'F',gen:2,p1:'',p2:'',sp:'tanchum_f'},
+  {id:'david',n:'David Makower',b:'1865',d:'1937',l:'Plock, Poland',g:'M',gen:3,p1:'tanchum_f',p2:'zelda',sp:'hadasa'},
+  {id:'hadasa',n:'Hadasa Schwarzberg',b:'1870',d:'',l:'Plock, Poland',g:'F',gen:3,p1:'',p2:'',sp:'david'},
+  {id:'tanchum',n:'Tanchum Makower',b:'1894',d:'1978',l:'Kfar-Hess, Israel',g:'M',gen:4,p1:'david',p2:'hadasa',sp:'gila'},
+  {id:'gila',n:'Gila Margalit',b:'1896',d:'1977',l:'Kfar-Hess, Israel',g:'F',gen:4,p1:'',p2:'',sp:'tanchum'},
+  {id:'isaac_y',n:'Isaac Yacob Makower',b:'1890',d:'Holocaust',l:'Lubic, Poland',g:'M',gen:4,p1:'david',p2:'hadasa',sp:'hinda'},
+  {id:'hinda',n:'Hinda Koral',b:'1895',d:'Holocaust',l:'Bukowiec, Poland',g:'F',gen:4,p1:'',p2:'',sp:'isaac_y'},
+  {id:'baruch',n:'Baruch Makower',b:'1894',d:'1942',l:'Warsaw, Poland',g:'M',gen:4,p1:'david',p2:'hadasa',sp:'lea'},
+  {id:'lea',n:'Lea Lichtenstein',b:'1905',d:'Holocaust',l:'Chorzele, Poland',g:'F',gen:4,p1:'',p2:'',sp:'baruch'},
+  {id:'rachel_r',n:'Rachel Makower',b:'1904',d:'1942',l:'Warsaw, Poland',g:'F',gen:4,p1:'david',p2:'hadasa',sp:'yitschak_b'},
+  {id:'yitschak_b',n:'Yitschak Berenstein',b:'1905',d:'Holocaust',l:'Warsaw, Poland',g:'M',gen:4,p1:'',p2:'',sp:'rachel_r'},
+  {id:'yosef',n:'Yosef Makower',b:'',d:'',l:'Plock, Poland',g:'M',gen:4,p1:'david',p2:'hadasa',sp:''},
+  {id:'frieda',n:'Frieda Makower',b:'1905',d:'1996',l:'Holon, Israel',g:'F',gen:4,p1:'david',p2:'hadasa',sp:'yoseph_k'},
+  {id:'yoseph_k',n:'Yoseph Kinamon',b:'1908',d:'2004',l:'Holon, Israel',g:'M',gen:4,p1:'',p2:'',sp:'frieda'},
+  {id:'zipora',n:'Zipora Makower',b:'1905',d:'1981',l:'Kfar-Hess, Israel',g:'F',gen:4,p1:'david',p2:'hadasa',sp:'tanchum_y'},
+  {id:'tanchum_y',n:'Tanchum Yakobi',b:'1888',d:'1960',l:'Kfar-Hess, Israel',g:'M',gen:4,p1:'',p2:'',sp:'zipora'},
+  {id:'ester_m',n:'Ester Makower',b:'1903',d:'1994',l:'Einat, Israel',g:'F',gen:4,p1:'david',p2:'hadasa',sp:'ezriel'},
+  {id:'ezriel',n:'Ezriel Ben-Yishai',b:'1909',d:'1987',l:'Einat, Israel',g:'M',gen:4,p1:'',p2:'',sp:'ester_m'},
+  {id:'yigal',n:'Yigal Makower',b:'1933',d:'2008',l:'Kfar-Hess, Israel',g:'M',gen:5,p1:'tanchum',p2:'gila',sp:'naomi'},
+  {id:'naomi',n:'Naomi Sheetenberg',b:'1937',d:'',l:'Kfar-Hess, Israel',g:'F',gen:5,p1:'',p2:'',sp:'yigal'},
+  {id:'alexander',n:'Alexander Makower',b:'1923',d:'2005',l:'Beer-Sheva, Israel',g:'M',gen:5,p1:'isaac_y',p2:'hinda',sp:'rachel_l'},
+  {id:'rachel_l',n:'Rachel Laska',b:'1924',d:'1998',l:'Beer-Sheva, Israel',g:'F',gen:5,p1:'',p2:'',sp:'alexander'},
+  {id:'ada',n:'Hadassah (Ada) Makower',b:'~1925',d:'1941',l:'Babi-Yar, Ukraine',g:'F',gen:5,p1:'isaac_y',p2:'hinda',sp:''},
+  {id:'hadassah_b',n:'Hadassah Makower',b:'1926',d:'1942',l:'Warsaw, Poland',g:'F',gen:5,p1:'baruch',p2:'lea',sp:''},
+  {id:'bracha',n:'Bracha Makower',b:'1931',d:'1942',l:'Warsaw, Poland',g:'F',gen:5,p1:'baruch',p2:'lea',sp:''},
+  {id:'hadassah_ber',n:'Hadassah Berenstein',b:'~1932',d:'1942',l:'Warsaw, Poland',g:'F',gen:5,p1:'rachel_r',p2:'yitschak_b',sp:''},
+  {id:'uri_k',n:'Uri Kinamon',b:'1935',d:'1956',l:'Amatzya, Israel',g:'M',gen:5,p1:'frieda',p2:'yoseph_k',sp:''},
+  {id:'menachem',n:'Menachem Yakoby',b:'1930',d:'',l:'Kfar-Hess, Israel',g:'M',gen:5,p1:'zipora',p2:'tanchum_y',sp:'tamar_f'},
+  {id:'tamar_f',n:'Tamar Friedman',b:'1936',d:'',l:'Kfar-Hess, Israel',g:'F',gen:5,p1:'',p2:'',sp:'menachem'},
+  {id:'david_y',n:'David Yakoby',b:'1940',d:'',l:'Kfar-Hess, Israel',g:'M',gen:5,p1:'zipora',p2:'tanchum_y',sp:'ester_z'},
+  {id:'ester_z',n:'Ester Zur',b:'1947',d:'',l:'Kfar-Hess, Israel',g:'F',gen:5,p1:'',p2:'',sp:'david_y'},
+  {id:'yacob_by',n:'Yacob Ben-Yishai',b:'1946',d:'',l:'Einat, Israel',g:'M',gen:5,p1:'ester_m',p2:'ezriel',sp:'nirit'},
+  {id:'nirit',n:'Nirit Hagari',b:'1946',d:'',l:'Einat, Israel',g:'F',gen:5,p1:'',p2:'',sp:'yacob_by'},
+  {id:'orit',n:'Orit Makower',b:'1961',d:'',l:'Kfar-Hess, Israel',g:'F',gen:6,p1:'yigal',p2:'naomi',sp:'yitzchak_f'},
+  {id:'yitzchak_f',n:'Yitzchak Felman',b:'1960',d:'',l:'Israel',g:'M',gen:6,p1:'',p2:'',sp:'orit'},
+  {id:'ofer',n:'Ofer Makower',b:'1963',d:'',l:'Gan-Yoshaya, Israel',g:'M',gen:6,p1:'yigal',p2:'naomi',sp:'carmen'},
+  {id:'carmen',n:'Carmen Deville',b:'1971',d:'',l:'South Africa',g:'F',gen:6,p1:'',p2:'',sp:'ofer'},
+  {id:'nizan',n:'Nizan Makower',b:'1970',d:'',l:'Kfar-Hess, Israel',g:'M',gen:6,p1:'yigal',p2:'naomi',sp:'efrat'},
+  {id:'efrat',n:'Efrat Parnas',b:'1971',d:'',l:'Israel',g:'F',gen:6,p1:'',p2:'',sp:'nizan'},
+  {id:'amir_m',n:'Amir Makower',b:'1948',d:'',l:'Caesarea, Israel',g:'M',gen:6,p1:'alexander',p2:'rachel_l',sp:'adina'},
+  {id:'adina',n:'Adina',b:'',d:'',l:'Israel',g:'F',gen:6,p1:'',p2:'',sp:'amir_m'},
+  {id:'yacob_m',n:'Yacob Makower',b:'1949',d:'',l:'Macabim, Israel',g:'M',gen:6,p1:'alexander',p2:'rachel_l',sp:'ofra'},
+  {id:'ofra',n:'Ofra Zur',b:'',d:'',l:'Israel',g:'F',gen:6,p1:'',p2:'',sp:'yacob_m'},
+  {id:'ilan',n:'Ilan Makower',b:'1956',d:'',l:'Sde-Boker, Israel',g:'M',gen:6,p1:'alexander',p2:'rachel_l',sp:'vardit'},
+  {id:'vardit',n:'Vardit Vardimon',b:'',d:'',l:'Israel',g:'F',gen:6,p1:'',p2:'',sp:'ilan'},
+  {id:'uri_ya',n:'Uri Yakoby',b:'1959',d:'',l:'Kfar-Hess, Israel',g:'M',gen:6,p1:'menachem',p2:'tamar_f',sp:'esther_p'},
+  {id:'esther_p',n:'Esther Porat',b:'1960',d:'',l:'Israel',g:'F',gen:6,p1:'',p2:'',sp:'uri_ya'},
+  {id:'einat',n:'Einat Yakoby',b:'1964',d:'',l:'Kfar-Hess, Israel',g:'F',gen:6,p1:'menachem',p2:'tamar_f',sp:'hadar'},
+  {id:'hadar',n:'Hadar Sharan',b:'1964',d:'',l:'Israel',g:'M',gen:6,p1:'',p2:'',sp:'einat'},
+  {id:'dana',n:'Dana Yakoby',b:'1970',d:'',l:'Kfar-Hess, Israel',g:'F',gen:6,p1:'menachem',p2:'tamar_f',sp:'amir_l'},
+  {id:'amir_l',n:'Amir Levi',b:'1968',d:'',l:'Israel',g:'M',gen:6,p1:'',p2:'',sp:'dana'},
+  {id:'osnat',n:'Osnat Yakoby',b:'1973',d:'',l:'Kfar-Hess, Israel',g:'F',gen:6,p1:'david_y',p2:'ester_z',sp:''},
+  {id:'ayelet',n:'Ayelet Yakoby',b:'1975',d:'',l:'Kfar-Hess, Israel',g:'F',gen:6,p1:'david_y',p2:'ester_z',sp:''},
+  {id:'yiftach',n:'Yiftach Yakoby',b:'1978',d:'',l:'Kfar-Hess, Israel',g:'M',gen:6,p1:'david_y',p2:'ester_z',sp:''},
+  {id:'ravit',n:'Ravit Ben-Yishai',b:'1969',d:'',l:'Timurim, Israel',g:'F',gen:6,p1:'yacob_by',p2:'nirit',sp:'arik'},
+  {id:'arik',n:'Arik Schreiber',b:'',d:'',l:'Israel',g:'M',gen:6,p1:'',p2:'',sp:'ravit'},
+  {id:'limor',n:'Limor Ben-Yishai',b:'1974',d:'',l:'Israel',g:'F',gen:6,p1:'yacob_by',p2:'nirit',sp:'nir'},
+  {id:'nir',n:'Nir Tamir',b:'',d:'',l:'Israel',g:'M',gen:6,p1:'',p2:'',sp:'limor'},
+  {id:'offer',n:'Offer Ben-Yishai',b:'1979',d:'',l:'Israel',g:'M',gen:6,p1:'yacob_by',p2:'nirit',sp:''},
+  {id:'sagi',n:'Sagi Ben-Yishai',b:'1982',d:'',l:'Israel',g:'M',gen:6,p1:'yacob_by',p2:'nirit',sp:''},
+  {id:'dolev',n:'Dolev Felman',b:'1990',d:'',l:'Israel',g:'M',gen:7,p1:'orit',p2:'yitzchak_f',sp:''},
+  {id:'nofar',n:'Nofar Makower',b:'1988',d:'',l:'Israel',g:'F',gen:7,p1:'ofer',p2:'carmen',sp:''},
+  {id:'gil',n:'Gil Makower',b:'1999',d:'',l:'Israel',g:'M',gen:7,p1:'ofer',p2:'carmen',sp:''},
+  {id:'daniel',n:'Daniel Makower',b:'2006',d:'',l:'Israel',g:'M',gen:7,p1:'ofer',p2:'carmen',sp:''},
+  {id:'tal_y',n:'Tal Yonathan Makower',b:'2007',d:'',l:'Israel',g:'M',gen:7,p1:'ofer',p2:'carmen',sp:''},
+  {id:'noah',n:"No'ah Makower",b:'2000',d:'',l:'Israel',g:'M',gen:7,p1:'nizan',p2:'efrat',sp:''},
+  {id:'maya',n:'Maya Makower',b:'2004',d:'',l:'Israel',g:'F',gen:7,p1:'nizan',p2:'efrat',sp:''},
+  {id:'tal_m',n:'Tal Makower',b:'1975',d:'',l:'Israel',g:'M',gen:7,p1:'amir_m',p2:'adina',sp:''},
+  {id:'yaniv',n:'Yaniv Makower',b:'1978',d:'',l:'Israel',g:'M',gen:7,p1:'amir_m',p2:'adina',sp:''},
+  {id:'eyal',n:'Eyal Makower',b:'1988',d:'',l:'Israel',g:'M',gen:7,p1:'amir_m',p2:'adina',sp:''},
+  {id:'uri_m',n:'Uri Makower',b:'1975',d:'',l:'Israel',g:'M',gen:7,p1:'yacob_m',p2:'ofra',sp:'hagar'},
+  {id:'hagar',n:'Hagar Barber',b:'1978',d:'',l:'Israel',g:'F',gen:7,p1:'',p2:'',sp:'uri_m'},
+  {id:'tamar_m',n:'Tamar Makower',b:'1975',d:'',l:'Magal, Israel',g:'F',gen:7,p1:'yacob_m',p2:'ofra',sp:'gal'},
+  {id:'gal',n:'Gal Zohar',b:'1974',d:'',l:'Israel',g:'M',gen:7,p1:'',p2:'',sp:'tamar_m'},
+  {id:'omri',n:'Omri Makower',b:'1980',d:'',l:'Tel-Aviv, Israel',g:'M',gen:7,p1:'yacob_m',p2:'ofra',sp:'shawna'},
+  {id:'shawna',n:'Shawna Noy',b:'1983',d:'',l:'Toronto, Canada',g:'F',gen:7,p1:'',p2:'',sp:'omri'},
+  {id:'yuval',n:'Yuval Makower',b:'1985',d:'',l:'Israel',g:'M',gen:7,p1:'yacob_m',p2:'ofra',sp:'tair'},
+  {id:'tair',n:'Tair Segal',b:'1985',d:'',l:'Israel',g:'F',gen:7,p1:'',p2:'',sp:'yuval'},
+  {id:'ori_m',n:'Ori Makower',b:'1985',d:'',l:'Israel',g:'M',gen:7,p1:'ilan',p2:'vardit',sp:''},
+  {id:'eran',n:'Eran Makower',b:'1990',d:'',l:'Israel',g:'M',gen:7,p1:'ilan',p2:'vardit',sp:''},
+  {id:'nadav',n:'Nadav Yakoby',b:'1992',d:'',l:'Israel',g:'M',gen:7,p1:'uri_ya',p2:'esther_p',sp:''},
+  {id:'reut',n:"Re'ut Yakoby",b:'1993',d:'',l:'Israel',g:'F',gen:7,p1:'uri_ya',p2:'esther_p',sp:''},
+  {id:'yoav',n:'Yoav Yakoby',b:'1995',d:'',l:'Israel',g:'M',gen:7,p1:'uri_ya',p2:'esther_p',sp:''},
+  {id:'bar',n:'Bar Sharan',b:'1995',d:'',l:'Israel',g:'M',gen:7,p1:'einat',p2:'hadar',sp:''},
+  {id:'noy',n:'Noy Sharan',b:'1995',d:'',l:'Israel',g:'F',gen:7,p1:'einat',p2:'hadar',sp:''},
+  {id:'maylee',n:'Maylee Sharan',b:'2001',d:'',l:'Israel',g:'F',gen:7,p1:'einat',p2:'hadar',sp:''},
+  {id:'ilay',n:'Ilay Levi',b:'1997',d:'',l:'Israel',g:'M',gen:7,p1:'dana',p2:'amir_l',sp:''},
+  {id:'tuval',n:'Tuval Levi',b:'2001',d:'',l:'Israel',g:'M',gen:7,p1:'dana',p2:'amir_l',sp:''},
+  {id:'shira',n:'Shira Makower',b:'2007',d:'',l:'Israel',g:'F',gen:8,p1:'uri_m',p2:'hagar',sp:''},
+  {id:'alon',n:'Alon Makower',b:'2009',d:'',l:'Israel',g:'M',gen:8,p1:'uri_m',p2:'hagar',sp:''},
+  {id:'rony',n:'Rony Makower',b:'2013',d:'',l:'Israel',g:'F',gen:8,p1:'uri_m',p2:'hagar',sp:''},
+  {id:'yotam',n:'Yotam Makower',b:'2015',d:'',l:'Israel',g:'M',gen:8,p1:'uri_m',p2:'hagar',sp:''},
+  {id:'omer',n:'Omer Zohar',b:'2006',d:'',l:'Magal, Israel',g:'M',gen:8,p1:'tamar_m',p2:'gal',sp:''},
+  {id:'yaara',n:'Yaara Zohar',b:'2008',d:'',l:'Magal, Israel',g:'F',gen:8,p1:'tamar_m',p2:'gal',sp:''},
+  {id:'roy',n:'Roy Zohar',b:'2011',d:'',l:'Magal, Israel',g:'M',gen:8,p1:'tamar_m',p2:'gal',sp:''},
+  {id:'avigail',n:'Avigail Makower',b:'2013',d:'',l:'Toronto, Canada',g:'F',gen:8,p1:'omri',p2:'shawna',sp:''},
+  {id:'adele',n:'Adele Makower',b:'2024',d:'',l:'Toronto, Canada',g:'F',gen:8,p1:'omri',p2:'shawna',sp:''},
+  {id:'itay',n:'Itay Makower',b:'2019',d:'',l:'New Jersey, USA',g:'M',gen:8,p1:'yuval',p2:'tair',sp:''},
+  {id:'ilan_l',n:'Ilan Makower',b:'2022',d:'',l:'New Jersey, USA',g:'M',gen:8,p1:'yuval',p2:'tair',sp:''},
 ];
-
-// ── Branch colours — each Gen 4 child of David gets its own colour ─
-// All their descendants inherit the same colour
-const BRANCH_COLORS = {
-  tanchum:  '#E05A2B',
-  isaac_y:  '#1B7A4E',
-  baruch:   '#8B2020',
-  rachel_r: '#C0392B',
-  yosef:    '#7D6608',
-  frieda:   '#8E44AD',
-  zipora:   '#2471A3',
-  ester_m:  '#B7950B',
-};
-
-// Walk up to find the Gen 4 ancestor branch root
-const idMap = {};
-P.forEach(p => idMap[p.id] = p);
-
-function getBranchColor(pid) {
-  let cur = idMap[pid];
-  if (!cur) return '#999';
-  // Walk up parent chain to find first gen-4 Makower child
-  for (let depth = 0; depth < 10; depth++) {
-    if (BRANCH_COLORS[cur.id]) return BRANCH_COLORS[cur.id];
-    // Try to go up via parent1 (the Makower-line parent)
-    const p1 = cur.p1 && idMap[cur.p1];
-    if (p1) { cur = p1; continue; }
-    const p2 = cur.p2 && idMap[cur.p2];
-    if (p2) { cur = p2; continue; }
-    break;
-  }
-  return '#777'; // gen 1-3 connections
+const BC={tanchum:'#E05A2B',isaac_y:'#1B7A4E',baruch:'#8B2020',rachel_r:'#C0392B',yosef:'#7D6608',frieda:'#8E44AD',zipora:'#2471A3',ester_m:'#B7950B'};
+const HL=new Set(['hadassah_b','bracha','hadassah_ber','ada','rachel_r','yitschak_b','baruch','lea','isaac_y','hinda']);
+const DC=new Set(['dawid','rachel_f','tanchum_f','zelda','david','tanchum','gila','ezriel','ester_m','tanchum_y','zipora','yoseph_k','frieda','yosef','rachel_l','alexander','yigal','uri_k','hadasa']);
+const idMap={};P.forEach(p=>idMap[p.id]=p);
+function gc(id,g){const s=HL.has(id)?'h':DC.has(id)?'d':'l';const f={h:{M:'#CDD0E8',F:'#E8CDD6'},d:{M:'#C8DCF0',F:'#F0C8DC'},l:{M:'#D6EAF8',F:'#FAD6EA'}};const k={h:{M:'#5B3A8A',F:'#8A2040'},d:{M:'#1B5E7A',F:'#8B3060'},l:{M:'#3B8BD4',F:'#D45389'}};return{fill:f[s][g],stroke:k[s][g]};}
+function gbc(pid){let c=idMap[pid];if(!c)return'#999';for(let i=0;i<10;i++){if(BC[c.id])return BC[c.id];const p=c.p1&&idMap[c.p1]||c.p2&&idMap[c.p2];if(p)c=p;else break;}return'#777';}
+const BR={tanchum:new Set(['tanchum','gila','yigal','naomi','orit','yitzchak_f','ofer','carmen','nizan','efrat','dolev','nofar','gil','daniel','tal_y','noah','maya']),baruch:new Set(['baruch','lea','hadassah_b','bracha']),isaac:new Set(['isaac_y','hinda','alexander','rachel_l','ada','amir_m','adina','yacob_m','ofra','ilan','vardit','tal_m','yaniv','eyal','uri_m','hagar','tamar_m','gal','omri','shawna','yuval','tair','ori_m','eran','shira','alon','rony','yotam','omer','yaara','roy','avigail','adele','itay','ilan_l']),rachel:new Set(['rachel_r','yitschak_b','hadassah_ber']),frieda:new Set(['frieda','yoseph_k','uri_k']),zipora:new Set(['zipora','tanchum_y','menachem','tamar_f','david_y','ester_z','uri_ya','esther_p','einat','hadar','dana','amir_l','osnat','ayelet','yiftach','nadav','reut','yoav','bar','noy','maylee','ilay','tuval']),ester:new Set(['ester_m','ezriel','yacob_by','nirit','ravit','arik','limor','nir','offer','sagi'])};
+const CORE=new Set(['dawid','rachel_f','tanchum_f','zelda','david','hadasa']);
+const GENS=[1,2,3,4,5,6,7,8],BW=148,BH=48,PT=30,PL=52,CW=162,RH=72;
+let ab='all';
+function tr(s,n){return s&&s.length>n?s.slice(0,n-1)+'…':(s||'');}
+function cpx(filtered){
+  const ids=new Set(filtered.map(p=>p.id));const pm={};
+  const hp=new Set();filtered.forEach(p=>{if((p.p1&&ids.has(p.p1))||(p.p2&&ids.has(p.p2)))hp.add(p.id);});
+  const mi=new Set(filtered.filter(p=>!p.p1&&!p.p2).map(p=>p.id));
+  GENS.forEach(gen=>{
+    const gp=filtered.filter(p=>p.gen===gen);if(!gp.length)return;
+    const roots=gp.filter(p=>hp.has(p.id)||gen<=3);
+    roots.sort((a,b)=>{const ax=pmxv(a,pm),bx=pmxv(b,pm);if(ax!==null&&bx!==null)return ax-bx;if(ax!==null)return-1;if(bx!==null)return 1;return(parseFloat((a.b||'0').replace('~',''))||9999)-(parseFloat((b.b||'0').replace('~',''))||9999);});
+    let col=0;const placed=new Set();
+    roots.forEach(r=>{if(placed.has(r.id))return;pm[r.id]=col++;placed.add(r.id);const s=r.sp&&ids.has(r.sp)?idMap[r.sp]:null;if(s&&mi.has(s.id)&&!placed.has(s.id)){pm[s.id]=col++;placed.add(s.id);}});
+    gp.forEach(p=>{if(!placed.has(p.id)){pm[p.id]=col++;placed.add(p.id);}});
+  });return pm;
 }
-
-// Card colours
-const HL = new Set(['hadassah_b','bracha','hadassah_ber','ada','rachel_r','yitschak_b','baruch','lea','isaac_y','hinda']);
-const DC = new Set(['dawid','rachel_f','tanchum_f','zelda','david','tanchum','gila','ezriel','ester_m','tanchum_y','zipora','yoseph_k','frieda','yosef','rachel_l','alexander','yigal','uri_k','hadasa']);
-function gc(id, g) {
-  const s = HL.has(id)?'h': DC.has(id)?'d':'l';
-  const f={h:{M:'#CDD0E8',F:'#E8CDD6'},d:{M:'#C8DCF0',F:'#F0C8DC'},l:{M:'#D6EAF8',F:'#FAD6EA'}};
-  const k={h:{M:'#5B3A8A',F:'#8A2040'},d:{M:'#1B5E7A',F:'#8B3060'},l:{M:'#3B8BD4',F:'#D45389'}};
-  return {fill:f[s][g], stroke:k[s][g]};
-}
-
-const BRANCHES = {
-  tanchum: new Set(['tanchum','gila','yigal','naomi','orit','yitzchak_f','ofer','carmen','nizan','efrat','dolev','nofar','gil','daniel','tal_y','noah','maya']),
-  baruch:  new Set(['baruch','lea','hadassah_b','bracha']),
-  isaac:   new Set(['isaac_y','hinda','alexander','rachel_l','ada','amir_m','adina','yacob_m','ofra','ilan','vardit','tal_m','yaniv','eyal','uri_m','hagar','tamar_m','gal','omri','shawna','yuval','tair','ori_m','eran','shira','alon','rony','yotam','omer','yaara','roy','avigail','adele','itay','ilan_l']),
-  rachel:  new Set(['rachel_r','yitschak_b','hadassah_ber']),
-  frieda:  new Set(['frieda','yoseph_k','uri_k']),
-  zipora:  new Set(['zipora','tanchum_y','menachem','tamar_f','david_y','ester_z','uri_ya','esther_p','einat','hadar','dana','amir_l','osnat','ayelet','yiftach','nadav','reut','yoav','bar','noy','maylee','ilay','tuval']),
-  ester:   new Set(['ester_m','ezriel','yacob_by','nirit','ravit','arik','limor','nir','offer','sagi']),
-};
-const CORE = new Set(['dawid','rachel_f','tanchum_f','zelda','david','hadasa']);
-
-const GENS = [1,2,3,4,5,6,7,8];
-const BW=148, BH=48, PT=30, PL=52, CW=162, RH=72;
-let activeBranch = 'all';
-
-function tr(s,n) { return s&&s.length>n ? s.slice(0,n-1)+'…' : (s||''); }
-
-// ── Family-aware layout (spouses adjacent, children under parents) ─
-function computePositions(filtered) {
-  const ids = new Set(filtered.map(p => p.id));
-  const pm = {};
-  const hasParents = new Set();
-  filtered.forEach(p => {
-    if ((p.p1 && ids.has(p.p1)) || (p.p2 && ids.has(p.p2))) hasParents.add(p.id);
+function pmxv(p,pm){const x1=(p.p1&&pm[p.p1]!==undefined)?pm[p.p1]:null;const x2=(p.p2&&pm[p.p2]!==undefined)?pm[p.p2]:null;if(x1!==null&&x2!==null)return(x1+x2)/2;return x1??x2;}
+function buildTree(){
+  const bids=ab==='all'?null:new Set([...BR[ab],...CORE]);
+  const fl=bids?P.filter(p=>bids.has(p.id)):P;const ids=new Set(fl.map(p=>p.id));
+  const cm=cpx(fl);const pm={};
+  fl.forEach(p=>{if(cm[p.id]!==undefined)pm[p.id]={x:PL+cm[p.id]*CW,y:PT+GENS.indexOf(p.gen)*RH*2};});
+  const maxX=Math.max(...Object.values(pm).map(p=>p.x))+BW+PL;
+  const sw=Math.max(maxX,600),sh=GENS.length*RH*2+PT*2+20;
+  let s=`<svg width="${sw}" height="${sh}" viewBox="0 0 ${sw} ${sh}" xmlns="http://www.w3.org/2000/svg">`;
+  GENS.forEach((g,gi)=>{s+=`<text class="gl" x="4" y="${PT+gi*RH*2+BH/2+4}" dominant-baseline="central">Gen ${g}</text>`;});
+  fl.forEach(ch=>{
+    const cp=pm[ch.id];if(!cp)return;const cx=cp.x+BW/2,cy=cp.y;
+    const p1o=ch.p1&&ids.has(ch.p1)&&pm[ch.p1],p2o=ch.p2&&ids.has(ch.p2)&&pm[ch.p2];
+    let fx,fy;
+    if(p1o&&p2o){fx=(pm[ch.p1].x+BW/2+pm[ch.p2].x+BW/2)/2;fy=pm[ch.p1].y+BH;}
+    else if(p1o){fx=pm[ch.p1].x+BW/2;fy=pm[ch.p1].y+BH;}
+    else if(p2o){fx=pm[ch.p2].x+BW/2;fy=pm[ch.p2].y+BH;}
+    else return;
+    const lc=gbc(ch.p1||ch.p2),my=fy+(cy-fy)*0.5;
+    s+=`<path fill="none" stroke="${lc}" stroke-width="2" opacity="0.7" d="M${fx},${fy} L${fx},${my} L${cx},${my} L${cx},${cy}"/>`;
   });
-  const marriedIn = new Set(filtered.filter(p => !p.p1 && !p.p2).map(p => p.id));
-
-  GENS.forEach(gen => {
-    const gp = filtered.filter(p => p.gen === gen);
-    if (!gp.length) return;
-    const roots = gp.filter(p => hasParents.has(p.id) || gen <= 3);
-    roots.sort((a, b) => {
-      const ax = parentMidX(a, pm), bx = parentMidX(b, pm);
-      if (ax !== null && bx !== null) return ax - bx;
-      if (ax !== null) return -1;
-      if (bx !== null) return 1;
-      return (parseFloat((a.b||'0').replace('~',''))||9999) - (parseFloat((b.b||'0').replace('~',''))||9999);
-    });
-    let col = 0;
-    const placed = new Set();
-    roots.forEach(root => {
-      if (placed.has(root.id)) return;
-      pm[root.id] = col++; placed.add(root.id);
-      const sp = root.sp && ids.has(root.sp) ? idMap[root.sp] : null;
-      if (sp && marriedIn.has(sp.id) && !placed.has(sp.id)) {
-        pm[sp.id] = col++; placed.add(sp.id);
-      }
-    });
-    gp.forEach(p => { if (!placed.has(p.id)) { pm[p.id] = col++; placed.add(p.id); } });
+  const dr=new Set();
+  fl.forEach(p=>{
+    if(!p.sp||!ids.has(p.sp))return;const key=[p.id,p.sp].sort().join('|');if(dr.has(key))return;dr.add(key);
+    const pp=pm[p.id],sp=pm[p.sp];if(!pp||!sp)return;
+    const y=pp.y+BH/2,x1=Math.min(pp.x+BW,sp.x+BW),x2=Math.max(pp.x,sp.x);if(x2<=x1)return;
+    s+=`<line fill="none" stroke="#aaa" stroke-width="1.5" stroke-dasharray="5 4" x1="${x1}" y1="${y}" x2="${x2}" y2="${y}"/>`;
   });
-  return pm;
-}
-
-function parentMidX(p, pm) {
-  const x1 = (p.p1 && pm[p.p1] !== undefined) ? pm[p.p1] : null;
-  const x2 = (p.p2 && pm[p.p2] !== undefined) ? pm[p.p2] : null;
-  if (x1!==null && x2!==null) return (x1+x2)/2;
-  return x1 ?? x2;
-}
-
-function buildTree() {
-  const bids = activeBranch==='all' ? null : new Set([...BRANCHES[activeBranch], ...CORE]);
-  const filtered = bids ? P.filter(p => bids.has(p.id)) : P;
-  const ids = new Set(filtered.map(p => p.id));
-
-  const colMap = computePositions(filtered);
-  const pm = {};
-  filtered.forEach(p => {
-    if (colMap[p.id] !== undefined)
-      pm[p.id] = { x: PL + colMap[p.id]*CW, y: PT + GENS.indexOf(p.gen)*RH*2 };
-  });
-
-  const maxX = Math.max(...Object.values(pm).map(p=>p.x)) + BW + PL;
-  const svgW = Math.max(maxX, 600);
-  const svgH = GENS.length*RH*2 + PT*2 + 20;
-
-  let s = `<svg width="${svgW}" height="${svgH}" viewBox="0 0 ${svgW} ${svgH}" xmlns="http://www.w3.org/2000/svg">`;
-
-  GENS.forEach((g,gi) => {
-    const y = PT + gi*RH*2 + BH/2 + 4;
-    s += `<text class="gl" x="4" y="${y}" dominant-baseline="central">Gen ${g}</text>`;
-  });
-
-  // ── Coloured parent→child connectors ──────────────────────────
-  // Use a thicker, coloured line per branch — much easier to follow
-  filtered.forEach(child => {
-    const cpos = pm[child.id];
-    if (!cpos) return;
-    const cx = cpos.x + BW/2, cy = cpos.y;
-    const p1ok = child.p1 && ids.has(child.p1) && pm[child.p1];
-    const p2ok = child.p2 && ids.has(child.p2) && pm[child.p2];
-    let fromX, fromY;
-    if (p1ok && p2ok) {
-      fromX = (pm[child.p1].x + BW/2 + pm[child.p2].x + BW/2) / 2;
-      fromY = pm[child.p1].y + BH;
-    } else if (p1ok) {
-      fromX = pm[child.p1].x + BW/2; fromY = pm[child.p1].y + BH;
-    } else if (p2ok) {
-      fromX = pm[child.p2].x + BW/2; fromY = pm[child.p2].y + BH;
-    } else return;
-
-    // Determine branch colour from the child's Makower-line ancestor
-    const lineColor = getBranchColor(child.p1 || child.p2);
-    const midY = fromY + (cy - fromY) * 0.5;
-
-    s += `<path fill="none" stroke="${lineColor}" stroke-width="2" opacity="0.7"
-      d="M${fromX},${fromY} L${fromX},${midY} L${cx},${midY} L${cx},${cy}"/>`;
-  });
-
-  // ── Spouse dashed lines (neutral grey) ────────────────────────
-  const drawn = new Set();
-  filtered.forEach(p => {
-    if (!p.sp || !ids.has(p.sp)) return;
-    const key = [p.id, p.sp].sort().join('|');
-    if (drawn.has(key)) return;
-    drawn.add(key);
-    const pp = pm[p.id], sp = pm[p.sp];
-    if (!pp || !sp) return;
-    const y = pp.y + BH/2;
-    const x1 = Math.min(pp.x+BW, sp.x+BW);
-    const x2 = Math.max(pp.x, sp.x);
-    if (x2 <= x1) return;
-    s += `<line fill="none" stroke="#999" stroke-width="1.5" stroke-dasharray="5 4"
-      x1="${x1}" y1="${y}" x2="${x2}" y2="${y}"/>`;
-  });
-
-  // ── Person cards ──────────────────────────────────────────────
-  filtered.forEach(p => {
-    const pos = pm[p.id];
-    if (!pos) return;
-    const {x,y} = pos, cx = x + BW/2;
-    const {fill, stroke} = gc(p.id, p.g);
-    const info = [p.b&&`b.${p.b}`, p.d&&`d.${p.d}`].filter(Boolean).join('  ');
-    const td = JSON.stringify({n:p.n,b:p.b,d:p.d,l:p.l,g:p.g}).replace(/"/g,'&quot;');
-    // Thin coloured left-edge accent matching branch line colour
-    const accent = getBranchColor(p.id);
-    s += `<g class="nc" data-t="${td}" onclick="sendPrompt('Tell me more about ${p.n.replace(/'/g,"\\'")} in the Makower family tree')">
+  fl.forEach(p=>{
+    const pos=pm[p.id];if(!pos)return;const{x,y}=pos,cx=x+BW/2;
+    const{fill,stroke}=gc(p.id,p.g);const acc=gbc(p.id);
+    const info=[p.b&&`b. ${p.b}`,p.d&&`d. ${p.d}`].filter(Boolean).join('  ');
+    s+=`<g class="nc" data-id="${p.id}">
       <rect x="${x}" y="${y}" width="${BW}" height="${BH}" rx="6" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>
-      <rect x="${x}" y="${y}" width="4" height="${BH}" rx="2" fill="${accent}" opacity="0.6"/>
-      <text font-family="var(--font-sans,sans-serif)" font-size="11" font-weight="600" fill="${stroke}"
-        x="${cx+2}" y="${y+13}" text-anchor="middle" dominant-baseline="central">${tr(p.n,18)}</text>
-      <text font-family="var(--font-sans,sans-serif)" font-size="10" fill="${stroke}" opacity="0.8"
-        x="${cx+2}" y="${y+27}" text-anchor="middle">${info}</text>
-      <text font-family="var(--font-sans,sans-serif)" font-size="9.5" fill="${stroke}" opacity="0.6"
-        x="${cx+2}" y="${y+40}" text-anchor="middle">${tr(p.l,18)}</text>
+      <rect x="${x}" y="${y}" width="4" height="${BH}" rx="2" fill="${acc}" opacity="0.65"/>
+      <text font-family="'Playfair Display',serif" font-size="11" font-weight="600" fill="${stroke}" x="${cx+2}" y="${y+13}" text-anchor="middle" dominant-baseline="central">${tr(p.n,18)}</text>
+      <text font-family="'Crimson Pro',serif" font-size="10" fill="${stroke}" opacity="0.8" x="${cx+2}" y="${y+27}" text-anchor="middle">${info}</text>
+      <text font-family="'Crimson Pro',serif" font-size="9.5" fill="${stroke}" opacity="0.6" x="${cx+2}" y="${y+40}" text-anchor="middle">${tr(p.l,18)}</text>
     </g>`;
   });
-
-  s += '</svg>';
-  document.getElementById('tree-wrap').innerHTML = s;
-
-  document.querySelectorAll('.nc').forEach(el => {
-    el.addEventListener('mouseenter', e => {
-      const d = JSON.parse(el.dataset.t);
-      const t = document.getElementById('tip');
-      let h = `<strong>${d.n}</strong><span style="font-size:11px;opacity:.6;margin-left:5px">${d.g==='M'?'♂':'♀'}</span>`;
-      if (d.b) h += `<br>Born: ${d.b}`;
-      if (d.d) h += `<br>Died: ${d.d}`;
-      if (d.l) h += `<br>📍 ${d.l}`;
-      t.innerHTML = h; t.style.opacity = '1';
+  s+='</svg>';document.getElementById('tree-wrap').innerHTML=s;
+  document.querySelectorAll('.nc').forEach(el=>{
+    el.addEventListener('mouseenter',e=>{
+      const p=idMap[el.dataset.id];if(!p)return;
+      const t=document.getElementById('tip');
+      let h=`<strong>${p.n}</strong><span style="opacity:.6;margin-left:5px;font-size:11px">${p.g==='M'?'♂':'♀'}</span>`;
+      if(p.b)h+=`<br>Born: ${p.b}`;if(p.d)h+=`<br>Died: ${p.d}`;if(p.l)h+=`<br>📍 ${p.l}`;
+      t.innerHTML=h;t.style.opacity='1';
     });
-    el.addEventListener('mousemove', e => {
-      const t = document.getElementById('tip');
-      t.style.left=(e.clientX+14)+'px'; t.style.top=(e.clientY-10)+'px';
-    });
-    el.addEventListener('mouseleave', () => { document.getElementById('tip').style.opacity='0'; });
+    el.addEventListener('mousemove',e=>{const t=document.getElementById('tip');t.style.left=(e.clientX+14)+'px';t.style.top=(e.clientY-10)+'px';});
+    el.addEventListener('mouseleave',()=>{document.getElementById('tip').style.opacity='0';});
   });
 }
+function fb(b,btn){ab=b;document.querySelectorAll('.tb').forEach(e=>e.classList.remove('active'));btn.classList.add('active');buildTree();}
 
-function fb(b, btn) {
-  activeBranch = b;
-  document.querySelectorAll('#fbar button').forEach(e => e.classList.remove('active'));
-  btn.classList.add('active');
-  buildTree();
+
+// PAGE NAV
+function showPage(id,link){
+  document.querySelectorAll('.page,#tree-page').forEach(el=>el.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('#topnav nav a').forEach(a=>a.classList.remove('active'));
+  if(link)link.classList.add('active');
+  if(id==='search-page'){document.getElementById('search-input').focus();doSearch();}
+  if(id==='doc-page')buildStats();
+}
+function hToc(a){document.querySelectorAll('.doc-toc a').forEach(x=>x.classList.remove('active'));a.classList.add('active');}
+
+// STATS
+function buildStats(){
+  const t=P.length,li=P.filter(p=>!p.d).length,hl=P.filter(p=>p.d==='Holocaust').length;
+  const isr=P.filter(p=>p.l.includes('Israel')).length;
+  const out=P.filter(p=>p.l&&!p.l.includes('Israel')&&!p.l.includes('Poland')&&!p.l.includes('Ukraine')&&p.l!=='').length;
+  const m=P.filter(p=>p.g==='M').length;
+  const stats=[{n:t,l:'Total members'},{n:8,l:'Generations'},{n:li,l:'Living today'},{n:hl,l:'Holocaust victims'},{n:isr,l:'In Israel'},{n:out,l:'Outside Israel'},{n:m,l:'Male'},{n:t-m,l:'Female'}];
+  document.getElementById('stat-grid').innerHTML=stats.map(s=>`<div class="stat-box"><div class="num">${s.n}</div><div class="lbl">${s.l}</div></div>`).join('');
 }
 
-buildTree();
-</script>
+// SEARCH
+let sf='all';
+function brOf(id){let c=idMap[id];for(let i=0;i<10;i++){if(BC[c?.id])return c.id;const p=c?.p1&&idMap[c.p1]||c?.p2&&idMap[c.p2];if(p)c=p;else break;}return'root';}
+const bname={tanchum:'Tanchum',isaac_y:'Isaac Yacob',baruch:'Baruch',rachel_r:'Rachel',yosef:'Yosef',frieda:'Frieda',zipora:'Zipora',ester_m:'Ester',root:'Root'};
+function setFilter(f,btn){sf=f;document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');doSearch();}
+function doSearch(){
+  const q=(document.getElementById('search-input').value||'').toLowerCase().trim();
+  let res=P.filter(p=>{
+    if(sf==='living')return !p.d;if(sf==='deceased')return p.d&&p.d!=='Holocaust';
+    if(sf==='holocaust')return p.d==='Holocaust';if(sf==='israel')return p.l.includes('Israel');
+    if(sf==='outside')return p.l&&!p.l.includes('Israel')&&!p.l.includes('Poland')&&!p.l.includes('Ukraine')&&p.l!=='';
+    if(sf==='M')return p.g==='M';if(sf==='F')return p.g==='F';return true;
+  });
+  if(q)res=res.filter(p=>p.n.toLowerCase().includes(q)||p.l.toLowerCase().includes(q)||(p.b&&p.b.includes(q))||(p.d&&p.d.includes(q)));
+  document.getElementById('search-count').textContent=`${res.length} result${res.length!==1?'s':''}`;
+  const con=document.getElementById('search-results');
+  if(!res.length){con.innerHTML='<div class="no-res">No matching family members found.</div>';return;}
+  con.innerHTML=res.map(p=>{
+    const parents=[p.p1&&idMap[p.p1]?.n,p.p2&&idMap[p.p2]?.n].filter(Boolean).join(' & ')||'—';
+    const spouse=p.sp&&idMap[p.sp]?idMap[p.sp].n:'—';
+    const children=P.filter(c=>c.p1===p.id||c.p2===p.id);
+    const b=brOf(p.id);const bc=BC[b]||'#777';const bn=bname[b]||'Root';
+    return `<div class="rc" style="border-left-color:${bc}" onclick="jumpTo('${p.id}')">
+      <h3>${p.n} ${p.g==='M'?'♂':'♀'}</h3>
+      <div class="meta">
+        ${p.b?`Born: <strong>${p.b}</strong>  `:''}${p.d?`Died: <strong>${p.d}</strong>`:''}
+        <br>📍 ${p.l||'Unknown'} · Gen ${p.gen}
+        ${parents!=='—'?`<br>Parents: ${parents}`:''}
+        ${spouse!=='—'?`<br>Spouse: ${spouse}`:''}
+        ${children.length?`<br>Children: ${children.map(c=>c.n).join(', ')}`:''}
+      </div>
+      <span class="btag" style="background:${bc}">${bn} branch</span>
+    </div>`;
+  }).join('');
+}
+function jumpTo(id){
+  showPage('tree-page',document.querySelectorAll('#topnav nav a')[0]);
+  ab='all';document.querySelectorAll('.tb').forEach(e=>e.classList.remove('active'));document.querySelector('.tb').classList.add('active');
+  buildTree();
+  setTimeout(()=>{const el=document.querySelector(`[data-id="${id}"]`);if(el)el.scrollIntoView({behavior:'smooth',block:'center'});},200);
+
+}
+

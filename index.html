@@ -484,7 +484,12 @@ function jumpTo(id){
   showPage('tree-page',document.querySelectorAll('#topnav nav a')[0]);
   ab='all';document.querySelectorAll('.tb').forEach(e=>e.classList.remove('active'));document.querySelector('.tb').classList.add('active');
   buildTree();
-  setTimeout(()=>{const el=document.querySelector(`[data-id="${id}"]`);if(el)el.scrollIntoView({behavior:'smooth',block:'center'});},200);
+  setTimeout(()=>{const el = document.querySelector('[data-id="' + id + '"]');if(el)el.scrollIntoView({behavior:'smooth',block:'center'});},200);
 
 }
-
+window.addEventListener('DOMContentLoaded', () => {
+  buildTree();
+});
+</script>
+</body>
+</html>

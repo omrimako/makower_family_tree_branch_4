@@ -262,54 +262,14 @@ body{font-family:var(--font-b);background:var(--bg);color:var(--text);display:fl
 const P=[
   {id:'dawid',n:'Dawid Makower',b:'1760',d:'1856',l:'Plock, Poland',g:'M',gen:1,p1:'',p2:'',sp:'rachel_f'},
   {id:'rachel_f',n:'Rachel Makower',b:'1771',d:'1873',l:'Plock, Poland',g:'F',gen:1,p1:'',p2:'',sp:'dawid'},
+  {id:'boruch',n:'Boruch Klamka',b:'1775',d:'1850',l:'Plock, Poland',g:'M',gen:1,p1:'',p2:'',sp:'tauba'},
+  {id:'tauba',n:'Tauba Klamka',b:'1795',d:'1860',l:'Plock, Poland',g:'F',gen:1,p1:'',p2:'',sp:'boruch'},
   {id:'tanchum_f',n:'Tanchum Makower',b:'1823',d:'1882',l:'Plock, Poland',g:'M',gen:2,p1:'dawid',p2:'rachel_f',sp:'zelda'},
-  {id:'zelda',n:'Zelda Klamka',b:'1830',d:'',l:'Plock, Poland',g:'F',gen:2,p1:'',p2:'',sp:'tanchum_f'},
-  // ── NEW Gen 2 — Dawid & Rachel's other children ──────────────
-  {id:'miriam',       n:'Miriam Makower',          b:'',      d:'',     l:'Plock, Poland',      g:'F',gen:2,p1:'dawid',p2:'rachel_f',sp:'yehuda_w'},
-  {id:'yehuda_w',     n:'Yehuda Leib Wojdyslawski', b:'',     d:'',     l:'Gabin, Poland',      g:'M',gen:2,p1:'',    p2:'',         sp:'miriam'},
-  {id:'reuven',       n:'Reuven Makower',           b:'',      d:'',     l:'Plock, Poland',      g:'M',gen:2,p1:'dawid',p2:'rachel_f',sp:''},
-  {id:'israel_mk',    n:'Israel Makower',           b:'~1807', d:'1853', l:'Prusocin, Poland',   g:'M',gen:2,p1:'dawid',p2:'rachel_f',sp:'yirath'},
-  {id:'yirath',       n:'Yirath Berlinski',         b:'~1810', d:'',     l:'Plock, Poland',      g:'F',gen:2,p1:'',    p2:'',         sp:'israel_mk'},
-  {id:'yehuda_leib',  n:'Yehuda Leib Makower',      b:'1820',  d:'1908', l:'Lodz, Poland',       g:'M',gen:2,p1:'dawid',p2:'rachel_f',sp:'ester_n'},
-  {id:'ester_n',      n:'Ester Narva',              b:'~1831', d:'1916', l:'Lodz, Poland',       g:'F',gen:2,p1:'',    p2:'',         sp:'yehuda_leib'},
-  {id:'motel',        n:'Motel Makower',             b:'~1821', d:'1852', l:'Plock, Poland',      g:'M',gen:2,p1:'dawid',p2:'rachel_f',sp:'gittla'},
-  {id:'gittla',       n:'Gittla Lipszyce',           b:'~1821', d:'',     l:'Plock, Poland',      g:'F',gen:2,p1:'',    p2:'',         sp:'motel'},
-  {id:'menachem_m',   n:'Menachem Mendel Makower',  b:'',      d:'',     l:'Plock, Poland',      g:'M',gen:2,p1:'dawid',p2:'rachel_f',sp:''},
-  {id:'yoseph_mk',    n:'Yoseph Makower',            b:'',      d:'',     l:'Plock, Poland',      g:'M',gen:2,p1:'dawid',p2:'rachel_f',sp:''},
-  {id:'aron_mk',      n:'Aron Makower',              b:'',      d:'',     l:'Szrensk, Poland',    g:'M',gen:2,p1:'dawid',p2:'rachel_f',sp:''},
-  {id:'mordechai_mk', n:'Mordechai Makower',         b:'',      d:'',     l:'Plock, Poland',      g:'M',gen:2,p1:'dawid',p2:'rachel_f',sp:''},
-  {id:'sara_mk',      n:'Sara Makower',              b:'',      d:'',     l:'Plock, Poland',      g:'F',gen:2,p1:'dawid',p2:'rachel_f',sp:''},
-  {id:'leah_mk',      n:'Leah Makower',              b:'',      d:'',     l:'Szrensk, Poland',    g:'F',gen:2,p1:'dawid',p2:'rachel_f',sp:''},
-  {id:'henya_mk',     n:'Henya Makower',             b:'',      d:'',     l:'Kempna, Poland',     g:'F',gen:2,p1:'dawid',p2:'rachel_f',sp:''},
-  {id:'rivka_mk',     n:'Rivka Makower',             b:'',      d:'',     l:'Plock, Poland',      g:'F',gen:2,p1:'dawid',p2:'rachel_f',sp:''},
-  // ── Tanchum's first wife (died 1855, before Zelda) ──────────
-  {id:'laja',         n:'Laja Klamka',               b:'~1825', d:'1855', l:'Plock, Poland',      g:'F',gen:2,p1:'',    p2:'',         sp:''},
-  // ── NEW Gen 3 — children of Motel Makower ───────────────────
-  {id:'mendel_mk',    n:'Mendel Makower',            b:'',      d:'',     l:'Plock, Poland',      g:'M',gen:3,p1:'motel',p2:'gittla',  sp:''},
-  {id:'zelik_mk',     n:'Zelik Makower',             b:'',      d:'',     l:'Plock, Poland',      g:'M',gen:3,p1:'motel',p2:'gittla',  sp:''},
-  {id:'zesse_mk',     n:'Zesse Makower',             b:'',      d:'',     l:'Plock, Poland',      g:'M',gen:3,p1:'motel',p2:'gittla',  sp:''},
-  {id:'alexander_mt', n:'Alexander Makower',         b:'',      d:'',     l:'Plock, Poland',      g:'M',gen:3,p1:'motel',p2:'gittla',  sp:''},
-  {id:'mirla',        n:'Mirla Hanna Makower',       b:'1846',  d:'',     l:'Plock, Poland',      g:'F',gen:3,p1:'motel',p2:'gittla',  sp:''},
-  {id:'juda_wolf',    n:'Juda Wolf Makower',         b:'1848',  d:'',     l:'Plock, Poland',      g:'M',gen:3,p1:'motel',p2:'gittla',  sp:''},
-  {id:'jakob_aron',   n:'Jakob Aron Makower',        b:'1850',  d:'',     l:'Plock, Poland',      g:'M',gen:3,p1:'motel',p2:'gittla',  sp:'ruchla'},
-  {id:'ruchla',       n:'Ruchla Kalmus',             b:'~1851', d:'',     l:'Plock, Poland',      g:'F',gen:3,p1:'',    p2:'',         sp:'jakob_aron'},
-  {id:'hinda_mk',     n:'Hinda Makower',             b:'',      d:'',     l:'Plock, Poland',      g:'F',gen:3,p1:'motel',p2:'gittla',  sp:''},
-  {id:'sora_laja',    n:'Sora Laja Makower',         b:'1852',  d:'',     l:'Plock, Poland',      g:'F',gen:3,p1:'motel',p2:'gittla',  sp:''},
-  // ── Gen 3 — children of Miriam Makower ─────────────────────
-  {id:'moshe_w',      n:'Moshe Wojdyslawski',        b:'',      d:'',     l:'Gabin, Poland',      g:'M',gen:3,p1:'miriam',p2:'yehuda_w',sp:''},
-  // ── Gen 3 — children of other Makowers ─────────────────────
-  {id:'abiesh',       n:'Abiesh Makower',            b:'',      d:'',     l:'Plock, Poland',      g:'M',gen:3,p1:'yoseph_mk',p2:'',   sp:''},
-  {id:'yakob_mrd',    n:'Yakob Makower',             b:'',      d:'',     l:'Plock, Poland',      g:'M',gen:3,p1:'mordechai_mk',p2:'',sp:''},
-  // ── Gen 4 — children of Jakob Aron Makower ─────────────────
-  {id:'josef_mw',     n:'Josef Makower',             b:'1877',  d:'',     l:'Plock, Poland',      g:'M',gen:4,p1:'jakob_aron',p2:'ruchla',sp:''},
-  {id:'yochanan_mw',  n:'Yochanan Makower',          b:'1878',  d:'',     l:'Plock, Poland',      g:'M',gen:4,p1:'jakob_aron',p2:'ruchla',sp:''},
-  {id:'sura_mw',      n:'Sura Makower',              b:'1886',  d:'',     l:'Plock, Poland',      g:'F',gen:4,p1:'jakob_aron',p2:'ruchla',sp:''},
-  // ── Gen 4 — children of Moshe Wojdyslawski ─────────────────
-  {id:'yakov_w',      n:'Yakov Yitzchak Wojdyslawski',b:'1842', d:'1914', l:'Lodz, Poland',       g:'M',gen:4,p1:'moshe_w',p2:'',      sp:'dvora'},
-  {id:'dvora',        n:'Dvora Freida Lubinski',     b:'1840',  d:'',     l:'Lodz, Poland',       g:'F',gen:4,p1:'',    p2:'',         sp:'yakov_w'},
-  {id:'mordechai_w',  n:'Mordechai Wojdyslawski',    b:'',      d:'',     l:'Zychlin, Poland',    g:'M',gen:4,p1:'moshe_w',p2:'',      sp:''},
+  {id:'zelda',n:'Zelda Malka Klamka',b:'1828',d:'1900',l:'Plock, Poland',g:'F',gen:2,p1:'boruch',p2:'tauba',sp:'tanchum_f'},
+  {id:'icek',n:'Icek Jakub Szwacburg',b:'1823',d:'1880',l:'Lipno, Poland',g:'M',gen:2,p1:'',p2:'',sp:'laja'},
+  {id:'laja',n:'Laja Anwits',b:'',d:'',l:'Lipno, Poland',g:'F',gen:2,p1:'',p2:'',sp:'icek'},
   {id:'david',n:'David Makower',b:'1865',d:'1937',l:'Plock, Poland',g:'M',gen:3,p1:'tanchum_f',p2:'zelda',sp:'hadasa'},
-  {id:'hadasa',n:'Hadasa Schwarzberg',b:'1870',d:'',l:'Plock, Poland',g:'F',gen:3,p1:'',p2:'',sp:'david'},
+  {id:'hadasa',n:'Hadasa Schwarzberg',b:'1870',d:'',l:'Plock, Poland',g:'F',gen:3,p1:'icek',p2:'laja',sp:'david'},
   {id:'tanchum',n:'Tanchum Makower',b:'1894',d:'1978',l:'Kfar-Hess, Israel',g:'M',gen:4,p1:'david',p2:'hadasa',sp:'gila'},
   {id:'gila',n:'Gila Margalit',b:'1896',d:'1977',l:'Kfar-Hess, Israel',g:'F',gen:4,p1:'',p2:'',sp:'tanchum'},
   {id:'isaac_y',n:'Isaac Yacob Makower',b:'1890',d:'Holocaust',l:'Lubic, Poland',g:'M',gen:4,p1:'david',p2:'hadasa',sp:'hinda'},
@@ -347,7 +307,7 @@ const P=[
   {id:'nizan',n:'Nizan Makower',b:'1970',d:'',l:'Kfar-Hess, Israel',g:'M',gen:6,p1:'yigal',p2:'naomi',sp:'efrat'},
   {id:'efrat',n:'Efrat Parnas',b:'1971',d:'',l:'Israel',g:'F',gen:6,p1:'',p2:'',sp:'nizan'},
   {id:'amir_m',n:'Amir Makower',b:'1948',d:'',l:'Caesarea, Israel',g:'M',gen:6,p1:'alexander',p2:'rachel_l',sp:'adina'},
-  {id:'adina',n:'Adina',b:'',d:'',l:'Israel',g:'F',gen:6,p1:'',p2:'',sp:'amir_m'},
+  {id:'adina',n:'Adina Paskovic',b:'',d:'',l:'Israel',g:'F',gen:6,p1:'',p2:'',sp:'amir_m'},
   {id:'yacob_m',n:'Yacob Makower',b:'1949',d:'',l:'Macabim, Israel',g:'M',gen:6,p1:'alexander',p2:'rachel_l',sp:'ofra'},
   {id:'ofra',n:'Ofra Zur',b:'',d:'',l:'Israel',g:'F',gen:6,p1:'',p2:'',sp:'yacob_m'},
   {id:'ilan',n:'Ilan Makower',b:'1956',d:'',l:'Sde-Boker, Israel',g:'M',gen:6,p1:'alexander',p2:'rachel_l',sp:'vardit'},
@@ -423,7 +383,8 @@ const idMap={};P.forEach(p=>idMap[p.id]=p);
 const PHOTOS={
   'rachel_l':'https://tinyurl.com/RachelLaska',
   'alexander':'https://sites-cf.mhcache.com/e/1/az1zaXRlc192MSZzPWFiZTExZjhjMDE1MzhiYmIwZGVhNGUyOGY1ZWUyMzc0Y2UwOTZjOGJkYjQwNjU5MGJhMzlkNmNkMDFmNGE0OGYmZT0xNzc2ODgwODAw/173/948/4416/500006_702064i067rrct5fi62d9d_A.jpg',
-  'isaac_y': 'https://sites-cf.mhcache.com/t/484/416/1739484416/500/500008_82493075dfc46065p9ircd_A_96x118/tUflmnGx8eUi8H6sl6-w6ACUCAA=/.jpg'
+  'isaac_y': 'https://sites-cf.mhcache.com/t/484/416/1739484416/500/500008_82493075dfc46065p9ircd_A_96x118/tUflmnGx8eUi8H6sl6-w6ACUCAA=/.jpg',
+  'icek': 'https://sites-cf.mhcache.com/t/484/416/1739484416/500/500018_763871va605ofdesjd9i67_A_96x128/eMsjgyN_hiCJsQQJgHiV1-EDLNs=/.jpg'
 };
 const BIO_LINKS={
   'uri_k':'https://www.izkor.gov.il/%D7%90%D7%95%D7%A8%D7%99%20%D7%A7%D7%A0%D7%9E%D7%95%D7%9F/en_47fc255172c124d865e16b4f0b34821a',

@@ -91,6 +91,7 @@ body{font-family:var(--font-b);background:var(--bg);color:var(--text);display:fl
 #map-path-info .path-note{font-size:12px;color:var(--muted);margin-top:6px;font-style:italic;}
 </style>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
 <div id="topnav">
@@ -257,13 +258,56 @@ body{font-family:var(--font-b);background:var(--bg);color:var(--text);display:fl
   </div>
 </div>
 <div id="tip"></div>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 const P=[
   {id:'dawid',n:'Dawid Makower',b:'1760',d:'1856',l:'Plock, Poland',g:'M',gen:1,p1:'',p2:'',sp:'rachel_f'},
   {id:'rachel_f',n:'Rachel Makower',b:'1771',d:'1873',l:'Plock, Poland',g:'F',gen:1,p1:'',p2:'',sp:'dawid'},
   {id:'tanchum_f',n:'Tanchum Makower',b:'1823',d:'1882',l:'Plock, Poland',g:'M',gen:2,p1:'dawid',p2:'rachel_f',sp:'zelda'},
-  {id:'zelda',n:'Zelda Makower',b:'1830',d:'',l:'Plock, Poland',g:'F',gen:2,p1:'',p2:'',sp:'tanchum_f'},
+  {id:'zelda',n:'Zelda Klamka',b:'1830',d:'',l:'Plock, Poland',g:'F',gen:2,p1:'',p2:'',sp:'tanchum_f'},
+  // ── NEW Gen 2 — Dawid & Rachel's other children ──────────────
+  {id:'miriam',       n:'Miriam Makower',          b:'',      d:'',     l:'Plock, Poland',      g:'F',gen:2,p1:'dawid',p2:'rachel_f',sp:'yehuda_w'},
+  {id:'yehuda_w',     n:'Yehuda Leib Wojdyslawski', b:'',     d:'',     l:'Gabin, Poland',      g:'M',gen:2,p1:'',    p2:'',         sp:'miriam'},
+  {id:'reuven',       n:'Reuven Makower',           b:'',      d:'',     l:'Plock, Poland',      g:'M',gen:2,p1:'dawid',p2:'rachel_f',sp:''},
+  {id:'israel_mk',    n:'Israel Makower',           b:'~1807', d:'1853', l:'Prusocin, Poland',   g:'M',gen:2,p1:'dawid',p2:'rachel_f',sp:'yirath'},
+  {id:'yirath',       n:'Yirath Berlinski',         b:'~1810', d:'',     l:'Plock, Poland',      g:'F',gen:2,p1:'',    p2:'',         sp:'israel_mk'},
+  {id:'yehuda_leib',  n:'Yehuda Leib Makower',      b:'1820',  d:'1908', l:'Lodz, Poland',       g:'M',gen:2,p1:'dawid',p2:'rachel_f',sp:'ester_n'},
+  {id:'ester_n',      n:'Ester Narva',              b:'~1831', d:'1916', l:'Lodz, Poland',       g:'F',gen:2,p1:'',    p2:'',         sp:'yehuda_leib'},
+  {id:'motel',        n:'Motel Makower',             b:'~1821', d:'1852', l:'Plock, Poland',      g:'M',gen:2,p1:'dawid',p2:'rachel_f',sp:'gittla'},
+  {id:'gittla',       n:'Gittla Lipszyce',           b:'~1821', d:'',     l:'Plock, Poland',      g:'F',gen:2,p1:'',    p2:'',         sp:'motel'},
+  {id:'menachem_m',   n:'Menachem Mendel Makower',  b:'',      d:'',     l:'Plock, Poland',      g:'M',gen:2,p1:'dawid',p2:'rachel_f',sp:''},
+  {id:'yoseph_mk',    n:'Yoseph Makower',            b:'',      d:'',     l:'Plock, Poland',      g:'M',gen:2,p1:'dawid',p2:'rachel_f',sp:''},
+  {id:'aron_mk',      n:'Aron Makower',              b:'',      d:'',     l:'Szrensk, Poland',    g:'M',gen:2,p1:'dawid',p2:'rachel_f',sp:''},
+  {id:'mordechai_mk', n:'Mordechai Makower',         b:'',      d:'',     l:'Plock, Poland',      g:'M',gen:2,p1:'dawid',p2:'rachel_f',sp:''},
+  {id:'sara_mk',      n:'Sara Makower',              b:'',      d:'',     l:'Plock, Poland',      g:'F',gen:2,p1:'dawid',p2:'rachel_f',sp:''},
+  {id:'leah_mk',      n:'Leah Makower',              b:'',      d:'',     l:'Szrensk, Poland',    g:'F',gen:2,p1:'dawid',p2:'rachel_f',sp:''},
+  {id:'henya_mk',     n:'Henya Makower',             b:'',      d:'',     l:'Kempna, Poland',     g:'F',gen:2,p1:'dawid',p2:'rachel_f',sp:''},
+  {id:'rivka_mk',     n:'Rivka Makower',             b:'',      d:'',     l:'Plock, Poland',      g:'F',gen:2,p1:'dawid',p2:'rachel_f',sp:''},
+  // ── Tanchum's first wife (died 1855, before Zelda) ──────────
+  {id:'laja',         n:'Laja Klamka',               b:'~1825', d:'1855', l:'Plock, Poland',      g:'F',gen:2,p1:'',    p2:'',         sp:''},
+  // ── NEW Gen 3 — children of Motel Makower ───────────────────
+  {id:'mendel_mk',    n:'Mendel Makower',            b:'',      d:'',     l:'Plock, Poland',      g:'M',gen:3,p1:'motel',p2:'gittla',  sp:''},
+  {id:'zelik_mk',     n:'Zelik Makower',             b:'',      d:'',     l:'Plock, Poland',      g:'M',gen:3,p1:'motel',p2:'gittla',  sp:''},
+  {id:'zesse_mk',     n:'Zesse Makower',             b:'',      d:'',     l:'Plock, Poland',      g:'M',gen:3,p1:'motel',p2:'gittla',  sp:''},
+  {id:'alexander_mt', n:'Alexander Makower',         b:'',      d:'',     l:'Plock, Poland',      g:'M',gen:3,p1:'motel',p2:'gittla',  sp:''},
+  {id:'mirla',        n:'Mirla Hanna Makower',       b:'1846',  d:'',     l:'Plock, Poland',      g:'F',gen:3,p1:'motel',p2:'gittla',  sp:''},
+  {id:'juda_wolf',    n:'Juda Wolf Makower',         b:'1848',  d:'',     l:'Plock, Poland',      g:'M',gen:3,p1:'motel',p2:'gittla',  sp:''},
+  {id:'jakob_aron',   n:'Jakob Aron Makower',        b:'1850',  d:'',     l:'Plock, Poland',      g:'M',gen:3,p1:'motel',p2:'gittla',  sp:'ruchla'},
+  {id:'ruchla',       n:'Ruchla Kalmus',             b:'~1851', d:'',     l:'Plock, Poland',      g:'F',gen:3,p1:'',    p2:'',         sp:'jakob_aron'},
+  {id:'hinda_mk',     n:'Hinda Makower',             b:'',      d:'',     l:'Plock, Poland',      g:'F',gen:3,p1:'motel',p2:'gittla',  sp:''},
+  {id:'sora_laja',    n:'Sora Laja Makower',         b:'1852',  d:'',     l:'Plock, Poland',      g:'F',gen:3,p1:'motel',p2:'gittla',  sp:''},
+  // ── Gen 3 — children of Miriam Makower ─────────────────────
+  {id:'moshe_w',      n:'Moshe Wojdyslawski',        b:'',      d:'',     l:'Gabin, Poland',      g:'M',gen:3,p1:'miriam',p2:'yehuda_w',sp:''},
+  // ── Gen 3 — children of other Makowers ─────────────────────
+  {id:'abiesh',       n:'Abiesh Makower',            b:'',      d:'',     l:'Plock, Poland',      g:'M',gen:3,p1:'yoseph_mk',p2:'',   sp:''},
+  {id:'yakob_mrd',    n:'Yakob Makower',             b:'',      d:'',     l:'Plock, Poland',      g:'M',gen:3,p1:'mordechai_mk',p2:'',sp:''},
+  // ── Gen 4 — children of Jakob Aron Makower ─────────────────
+  {id:'josef_mw',     n:'Josef Makower',             b:'1877',  d:'',     l:'Plock, Poland',      g:'M',gen:4,p1:'jakob_aron',p2:'ruchla',sp:''},
+  {id:'yochanan_mw',  n:'Yochanan Makower',          b:'1878',  d:'',     l:'Plock, Poland',      g:'M',gen:4,p1:'jakob_aron',p2:'ruchla',sp:''},
+  {id:'sura_mw',      n:'Sura Makower',              b:'1886',  d:'',     l:'Plock, Poland',      g:'F',gen:4,p1:'jakob_aron',p2:'ruchla',sp:''},
+  // ── Gen 4 — children of Moshe Wojdyslawski ─────────────────
+  {id:'yakov_w',      n:'Yakov Yitzchak Wojdyslawski',b:'1842', d:'1914', l:'Lodz, Poland',       g:'M',gen:4,p1:'moshe_w',p2:'',      sp:'dvora'},
+  {id:'dvora',        n:'Dvora Freida Lubinski',     b:'1840',  d:'',     l:'Lodz, Poland',       g:'F',gen:4,p1:'',    p2:'',         sp:'yakov_w'},
+  {id:'mordechai_w',  n:'Mordechai Wojdyslawski',    b:'',      d:'',     l:'Zychlin, Poland',    g:'M',gen:4,p1:'moshe_w',p2:'',      sp:''},
   {id:'david',n:'David Makower',b:'1865',d:'1937',l:'Plock, Poland',g:'M',gen:3,p1:'tanchum_f',p2:'zelda',sp:'hadasa'},
   {id:'hadasa',n:'Hadasa Schwarzberg',b:'1870',d:'',l:'Plock, Poland',g:'F',gen:3,p1:'',p2:'',sp:'david'},
   {id:'tanchum',n:'Tanchum Makower',b:'1894',d:'1978',l:'Kfar-Hess, Israel',g:'M',gen:4,p1:'david',p2:'hadasa',sp:'gila'},
@@ -363,17 +407,30 @@ const P=[
   {id:'itay',n:'Itay Makower',b:'2019',d:'',l:'New Jersey, USA',g:'M',gen:8,p1:'yuval',p2:'tair',sp:''},
   {id:'ilan_l',n:'Ilan Makower',b:'2022',d:'',l:'New Jersey, USA',g:'M',gen:8,p1:'yuval',p2:'tair',sp:''},
 ];
-const BC={tanchum:'#E05A2B',isaac_y:'#1B7A4E',baruch:'#8B2020',rachel_r:'#C0392B',yosef:'#7D6608',frieda:'#8E44AD',zipora:'#2471A3',ester_m:'#B7950B'};
+const BC={
+  // Gen 4 branches (children of David)
+  tanchum:'#E05A2B',isaac_y:'#1B7A4E',baruch:'#8B2020',rachel_r:'#C0392B',
+  yosef:'#7D6608',frieda:'#8E44AD',zipora:'#2471A3',ester_m:'#B7950B',
+  // Gen 2 branches (children of Dawid)
+  miriam:'#5D6D7E',reuven:'#717D7E',israel_mk:'#6E2F5E',
+  yehuda_leib:'#1A5276',motel:'#7B7D7D',menachem_m:'#884EA0',
+  yoseph_mk:'#7D6608',aron_mk:'#566573',mordechai_mk:'#4A235A',
+  sara_mk:'#6E2F5E',leah_mk:'#5D4037',henya_mk:'#4E342E',rivka_mk:'#4A148C',
+};
 const HL=new Set(['hadassah_b','bracha','hadassah_ber','ada','rachel_r','yitschak_b','baruch','lea','isaac_y','hinda']);
 const DC=new Set(['dawid','rachel_f','tanchum_f','zelda','david','tanchum','gila','ezriel','ester_m','tanchum_y','zipora','yoseph_k','frieda','yosef','rachel_l','alexander','yigal','uri_k','hadasa']);
 const idMap={};P.forEach(p=>idMap[p.id]=p);
+const PHOTOS={
+  'rachel_l':'https://tinyurl.com/RachelLaska',
+  'alexander':'https://sites-cf.mhcache.com/e/1/az1zaXRlc192MSZzPWFiZTExZjhjMDE1MzhiYmIwZGVhNGUyOGY1ZWUyMzc0Y2UwOTZjOGJkYjQwNjU5MGJhMzlkNmNkMDFmNGE0OGYmZT0xNzc2ODgwODAw/173/948/4416/500006_702064i067rrct5fi62d9d_A.jpg',
+  'isaac_y': 'https://sites-cf.mhcache.com/t/484/416/1739484416/500/500008_82493075dfc46065p9ircd_A_96x118/tUflmnGx8eUi8H6sl6-w6ACUCAA=/.jpg'
+};
 const BIO_LINKS={
   'uri_k':'https://www.izkor.gov.il/%D7%90%D7%95%D7%A8%D7%99%20%D7%A7%D7%A0%D7%9E%D7%95%D7%9F/en_47fc255172c124d865e16b4f0b34821a',
   'tanchum':'https://rishonim.org.il/telmond/info/founder_show.aspx?id=112503',
   'gila':'https://www.rishonim.org.il/telmond/info/founder_show.aspx?id=112502',
   'tanchum_y':'https://www.rishonim.org.il/telmond/show_item.asp?levelId=45275&itemId=7998&itemType=6001',
   'zipora':'https://www.rishonim.org.il/telmond/show_item.asp?levelId=45275&itemId=7998&itemType=6001'
-
 };
 function gc(id,g){const s=HL.has(id)?'h':DC.has(id)?'d':'l';const f={h:{M:'#CDD0E8',F:'#E8CDD6'},d:{M:'#C8DCF0',F:'#F0C8DC'},l:{M:'#D6EAF8',F:'#FAD6EA'}};const k={h:{M:'#5B3A8A',F:'#8A2040'},d:{M:'#1B5E7A',F:'#8B3060'},l:{M:'#3B8BD4',F:'#D45389'}};return{fill:f[s][g],stroke:k[s][g]};}
 function gbc(pid){let c=idMap[pid];if(!c)return'#999';for(let i=0;i<10;i++){if(BC[c.id])return BC[c.id];const p=c.p1&&idMap[c.p1]||c.p2&&idMap[c.p2];if(p)c=p;else break;}return'#777';}
@@ -428,12 +485,30 @@ function buildTree(){
     const{fill,stroke}=gc(p.id,p.g);const acc=gbc(p.id);
     const info=[p.b&&`b. ${p.b}`,p.d&&`d. ${p.d}`].filter(Boolean).join('  ');
     const bioUrl = BIO_LINKS[p.id] || '';
+    const photoUrl = PHOTOS[p.id] || '';
+    const hasPhoto = !!photoUrl;
+    const photoR = 20; // photo circle radius
+    const photoX = x + 8 + photoR; // center x of photo
+    const photoY = y + BH/2;       // center y of photo
+    const textX  = hasPhoto ? photoX + photoR + 6 : cx + 2;
+    const textW  = hasPhoto ? BW - (photoR*2 + 20) : BW;
+    const textCX = hasPhoto ? x + photoR*2 + 16 + textW/2 : cx + 2;
+    const clipId = 'clip_' + p.id;
     s+=`<g class="nc" data-id="${p.id}" onclick="openMap('${p.id}')">
       <rect x="${x}" y="${y}" width="${BW}" height="${BH}" rx="6" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>
       <rect x="${x}" y="${y}" width="4" height="${BH}" rx="2" fill="${acc}" opacity="0.65"/>
-      <text font-family="'Playfair Display',serif" font-size="13" font-weight="600" fill="${stroke}" x="${cx+2}" y="${y+15}" text-anchor="middle" dominant-baseline="central">${tr(p.n,20)}</text>
-      <text font-family="'Crimson Pro',serif" font-size="12" fill="${stroke}" opacity="0.8" x="${cx+2}" y="${y+31}" text-anchor="middle">${info}</text>
-      <text font-family="'Crimson Pro',serif" font-size="11.5" fill="${stroke}" opacity="0.6" x="${cx+2}" y="${y+46}" text-anchor="middle">${tr(p.l,20)}</text>
+      ${hasPhoto ? `
+        <defs>
+          <clipPath id="${clipId}">
+            <circle cx="${photoX}" cy="${photoY}" r="${photoR}"/>
+          </clipPath>
+        </defs>
+        <circle cx="${photoX}" cy="${photoY}" r="${photoR+1.5}" fill="${stroke}" opacity="0.4"/>
+        <image href="${photoUrl}" x="${photoX-photoR}" y="${photoY-photoR}" width="${photoR*2}" height="${photoR*2}" clip-path="url(#${clipId})" preserveAspectRatio="xMidYMid slice"/>
+      ` : ''}
+      <text font-family="'Playfair Display',serif" font-size="13" font-weight="600" fill="${stroke}" x="${textCX}" y="${y+15}" text-anchor="middle" dominant-baseline="central">${tr(p.n, hasPhoto ? 14 : 20)}</text>
+      <text font-family="'Crimson Pro',serif" font-size="12" fill="${stroke}" opacity="0.8" x="${textCX}" y="${y+31}" text-anchor="middle">${info}</text>
+      <text font-family="'Crimson Pro',serif" font-size="11.5" fill="${stroke}" opacity="0.6" x="${textCX}" y="${y+46}" text-anchor="middle">${tr(p.l, hasPhoto ? 14 : 20)}</text>
       ${bioUrl ? `<g class="bio-link-btn" onclick="event.stopPropagation();window.open('${bioUrl}','_blank')" style="cursor:pointer">
         <rect x="${x+BW-20}" y="${y+2}" width="18" height="16" rx="4" fill="${acc}" opacity="0.85"/>
         <text font-size="10" fill="#fff" x="${x+BW-11}" y="${y+13}" text-anchor="middle" dominant-baseline="central">🔗</text>
@@ -523,6 +598,15 @@ function jumpTo(id){
 // Map of location string → [lat, lng, displayName]
 const COORDS = {
   'Plock, Poland':         [52.5462, 19.7031, 'Płock, Poland'],
+  'Prusocin, Poland':       [52.5200, 19.6700, 'Prusocin, Poland'],
+  'Gabin, Poland':          [52.3833, 19.7167, 'Gąbin, Poland'],
+  'Prusocin, Poland':       [52.5200, 19.6700, 'Prusocin, Poland'],
+  'Lodz, Poland':           [51.7592, 19.4560, 'Łódź, Poland'],
+  'Zychlin, Poland':        [52.2500, 19.6167, 'Żychlin, Poland'],
+  'Szrensk, Poland':        [53.0667, 20.1500, 'Szrensk, Poland'],
+  'Kempna, Poland':         [51.9000, 20.4000, 'Kempna, Poland'],
+  'Kowal, Poland':          [52.5333, 18.9167, 'Kowal, Poland'],
+  'Radzinowice, Poland':    [52.5000, 19.6500, 'Radzinowice, Poland'],
   'Lubic, Poland':         [53.0200, 18.6100, 'Lubicz, Poland'],
   'Bukowiec, Poland':      [53.1500, 18.9000, 'Bukowiec, Poland'],
   'Warsaw, Poland':        [52.2297, 21.0122, 'Warsaw, Poland'],

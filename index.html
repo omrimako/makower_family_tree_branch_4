@@ -37,8 +37,8 @@ body{font-family:var(--font-b);background:var(--bg);color:var(--text);display:fl
 #search-page .search-box{display:flex;gap:10px;margin-bottom:16px;align-items:center;}
 #search-input{flex:1;padding:11px 16px;border:1.5px solid var(--border);border-radius:10px;font-family:var(--font-b);font-size:16px;background:var(--surface);color:var(--text);max-width:500px;}
 #search-input:focus{outline:none;border-color:var(--accent);}
-.filter-row{display:flex;gap:7px;margin-bottom:18px;flex-wrap:wrap;align-items:center;}
-.fbtn{padding:4px 13px;border-radius:12px;border:1px solid var(--border);background:var(--bg);font-size:12px;cursor:pointer;font-family:var(--font-b);color:var(--muted);transition:all .13s;}
+.filter-row{display:flex;gap:7px;margin-bohibda
+border:1px solid var(--border);background:var(--bg);font-size:12px;cursor:pointer;font-family:var(--font-b);color:var(--muted);transition:all .13s;}
 .fbtn:hover,.fbtn.active{background:var(--accent);color:#fff;border-color:var(--accent);}
 #search-results{display:grid;grid-template-columns:repeat(auto-fill,minmax(275px,1fr));gap:12px;}
 .rc{background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:13px 15px;cursor:pointer;transition:all .14s;border-left:4px solid transparent;}
@@ -269,7 +269,7 @@ const P=[
   {id:'icek',n:'Icek Jakub Szwacburg',b:'1823',d:'1880',l:'Lipno, Poland',g:'M',gen:2,p1:'',p2:'',sp:'laja'},
   {id:'laja',n:'Laja Anwits',b:'',d:'',l:'Lipno, Poland',g:'F',gen:2,p1:'',p2:'',sp:'icek'},
   {id:'david',n:'David Makower',b:'1865',d:'1937',l:'Plock, Poland',g:'M',gen:3,p1:'tanchum_f',p2:'zelda',sp:'hadasa'},
-  {id:'hadasa',n:'Hadasa Schwarzberg',b:'1870',d:'',l:'Plock, Poland',g:'F',gen:3,p1:'icek',p2:'laja',sp:'david'},
+  {id:'hadasa',n:'Hadasa Schwarzberg',b:'1870',d:'1913',l:'Plock, Poland',g:'F',gen:3,p1:'icek',p2:'laja',sp:'david'},
   {id:'tanchum',n:'Tanchum Makower',b:'1894',d:'1978',l:'Kfar-Hess, Israel',g:'M',gen:4,p1:'david',p2:'hadasa',sp:'gila'},
   {id:'gila',n:'Gila Margalit',b:'1896',d:'1977',l:'Kfar-Hess, Israel',g:'F',gen:4,p1:'',p2:'',sp:'tanchum'},
   {id:'isaac_y',n:'Isaac Yacob Makower',b:'1890',d:'Holocaust',l:'Lubic, Poland',g:'M',gen:4,p1:'david',p2:'hadasa',sp:'hinda'},
@@ -381,6 +381,8 @@ const HL=new Set(['hadassah_b','bracha','hadassah_ber','ada','rachel_r','yitscha
 const DC=new Set(['dawid','rachel_f','tanchum_f','zelda','david','tanchum','gila','ezriel','ester_m','tanchum_y','zipora','yoseph_k','frieda','yosef','rachel_l','alexander','yigal','uri_k','hadasa']);
 const idMap={};P.forEach(p=>idMap[p.id]=p);
 const PHOTOS={
+  'ada': 'images/Hadassa.jpeg',
+  'hinda': 'images/Hinda.jpeg',
   'rachel_l':'https://tinyurl.com/RachelLaska',
   'alexander':'https://sites-cf.mhcache.com/e/1/az1zaXRlc192MSZzPWFiZTExZjhjMDE1MzhiYmIwZGVhNGUyOGY1ZWUyMzc0Y2UwOTZjOGJkYjQwNjU5MGJhMzlkNmNkMDFmNGE0OGYmZT0xNzc2ODgwODAw/173/948/4416/500006_702064i067rrct5fi62d9d_A.jpg',
   'isaac_y': 'https://sites-cf.mhcache.com/t/484/416/1739484416/500/500008_82493075dfc46065p9ircd_A_96x118/tUflmnGx8eUi8H6sl6-w6ACUCAA=/.jpg',

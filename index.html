@@ -73,6 +73,66 @@ border:1px solid var(--border);background:var(--bg);font-size:12px;cursor:pointe
 #tip strong{display:block;margin-bottom:2px;font-family:var(--font-d);}
 ::-webkit-scrollbar{width:5px;height:5px;}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
 
+/* ── RELATIONSHIP FINDER ── */
+#rel-bar {
+  background:var(--surface); border-bottom:1px solid var(--border2);
+  padding:8px 16px; display:flex; gap:10px; align-items:center;
+  flex-wrap:wrap; flex-shrink:0; font-family:var(--font-b); font-size:13px;
+}
+#rel-bar .rel-label { color:var(--muted); font-size:12px; white-space:nowrap; }
+.rel-person-box {
+  display:flex; align-items:center; gap:6px;
+  background:var(--bg); border:1.5px solid var(--border); border-radius:8px;
+  padding:4px 10px; min-width:160px; cursor:pointer; transition:all .15s;
+}
+.rel-person-box.selected { border-color:var(--gold); background:var(--gold-light); }
+.rel-person-box .rel-name { font-size:13px; color:var(--text); flex:1; }
+.rel-person-box .rel-clear-btn { color:var(--faint); font-size:14px; cursor:pointer; padding:0 2px; }
+.rel-person-box .rel-clear-btn:hover { color:var(--text); }
+#rel-find-btn {
+  padding:5px 16px; background:var(--accent); color:#fff; border:none;
+  border-radius:8px; cursor:pointer; font-family:var(--font-b); font-size:13px;
+  white-space:nowrap; transition:opacity .15s;
+}
+#rel-find-btn:disabled { opacity:.4; cursor:not-allowed; }
+#rel-reset-btn {
+  padding:5px 12px; background:transparent; color:var(--muted); border:1px solid var(--border);
+  border-radius:8px; cursor:pointer; font-family:var(--font-b); font-size:13px;
+}
+#rel-result-bar {
+  display:none; background:var(--gold-light); border-bottom:2px solid var(--gold);
+  padding:10px 18px; font-family:var(--font-b); font-size:14px; color:var(--text);
+  flex-shrink:0; line-height:1.6;
+}
+#rel-result-bar.visible { display:block; }
+#rel-result-bar strong { color:var(--accent); }
+#rel-result-bar .common-ancestor {
+  display:inline-block; background:var(--accent); color:#fff;
+  padding:1px 10px; border-radius:10px; font-size:12px; margin-left:6px;
+}
+.nc.path-highlight rect:first-of-type { stroke-width:3 !important; filter:drop-shadow(0 0 6px rgba(181,134,13,0.7)); }
+.nc.path-dim { opacity:0.25; }
+body.selecting-p1 .nc, body.selecting-p2 .nc { cursor:crosshair !important; }
+.rel-search-wrap { position:relative; }
+.rel-search-wrap input {
+  padding:4px 10px; border:1.5px solid var(--border); border-radius:8px;
+  font-family:var(--font-b); font-size:13px; background:var(--bg);
+  color:var(--text); width:160px;
+}
+.rel-search-wrap input:focus { outline:none; border-color:var(--accent); }
+.rel-dropdown {
+  position:absolute; top:calc(100% + 4px); left:0; right:0;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,.1);
+  z-index:500; max-height:200px; overflow-y:auto; display:none;
+}
+.rel-dropdown.open { display:block; }
+.rel-drop-item {
+  padding:7px 12px; font-size:13px; cursor:pointer;
+  font-family:var(--font-b); transition:background .1s;
+}
+.rel-drop-item:hover { background:var(--surface2); }
+
 /* ── MAP MODAL ── */
 #map-overlay{position:fixed;inset:0;background:rgba(20,18,14,.65);z-index:1000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(3px);}
 #map-overlay.open{display:flex;}
@@ -134,6 +194,22 @@ border:1px solid var(--border);background:var(--bg);font-size:12px;cursor:pointe
         <span class="leg"><span class="lline" style="background:#B7950B"></span>Ester</span>
         <span class="leg" style="margin-left:4px"><span style="display:inline-block;width:20px;border-top:2px dashed #aaa;vertical-align:middle"></span>Spouse</span>
       </div>
+      <!-- RELATIONSHIP FINDER BAR -->
+      <div id="rel-bar">
+        <span class="rel-label">🔗 Relationship Finder:</span>
+        <div class="rel-search-wrap">
+          <input type="text" id="rel-search-1" placeholder="Person 1…" oninput="relSearch(1,this.value)" autocomplete="off">
+          <div class="rel-dropdown" id="rel-drop-1"></div>
+        </div>
+        <span class="rel-label" style="color:var(--gold)">↔</span>
+        <div class="rel-search-wrap">
+          <input type="text" id="rel-search-2" placeholder="Person 2…" oninput="relSearch(2,this.value)" autocomplete="off">
+          <div class="rel-dropdown" id="rel-drop-2"></div>
+        </div>
+        <button id="rel-find-btn" onclick="findRelationship()" disabled>Find</button>
+        <button id="rel-reset-btn" onclick="resetRel()">Clear</button>
+      </div>
+      <div id="rel-result-bar"></div>
       <div id="tree-wrap"></div>
     </div>
     <!-- SEARCH -->
@@ -337,14 +413,10 @@ const P=[
   {id:'tal_m',n:'Tal Makower',b:'1975',d:'',l:'Israel',g:'M',gen:7,p1:'amir_m',p2:'adina',sp:''},
   {id:'yaniv',n:'Yaniv Makower',b:'1978',d:'',l:'Israel',g:'M',gen:7,p1:'amir_m',p2:'adina',sp:''},
   {id:'eyal',n:'Eyal Makower',b:'1988',d:'',l:'Israel',g:'M',gen:7,p1:'amir_m',p2:'adina',sp:''},
-  {id:'uri_m',n:'Uri Makower',b:'1975',d:'',l:'Israel',g:'M',gen:7,p1:'yacob_m',p2:'ofra',sp:'hagar'},
-  {id:'hagar',n:'Hagar Barber',b:'1978',d:'',l:'Israel',g:'F',gen:7,p1:'',p2:'',sp:'uri_m'},
-  {id:'tamar_m',n:'Tamar Makower',b:'1975',d:'',l:'Magal, Israel',g:'F',gen:7,p1:'yacob_m',p2:'ofra',sp:'gal'},
-  {id:'gal',n:'Gal Zohar',b:'1974',d:'',l:'Israel',g:'M',gen:7,p1:'',p2:'',sp:'tamar_m'},
-  {id:'omri',n:'Omri Makower',b:'1980',d:'',l:'Tel-Aviv, Israel',g:'M',gen:7,p1:'yacob_m',p2:'ofra',sp:'shawna'},
-  {id:'shawna',n:'Shawna Noy',b:'1983',d:'',l:'Toronto, Canada',g:'F',gen:7,p1:'',p2:'',sp:'omri'},
-  {id:'yuval',n:'Yuval Makower',b:'1985',d:'',l:'Israel',g:'M',gen:7,p1:'yacob_m',p2:'ofra',sp:'tair'},
-  {id:'tair',n:'Tair Segal',b:'1985',d:'',l:'Israel',g:'F',gen:7,p1:'',p2:'',sp:'yuval'},
+  {id:'uri_m',n:'Uri Makower',b:'1975',d:'',l:'Israel',g:'M',gen:7,p1:'yacob_m',p2:'ofra',sp:''},
+  {id:'tamar_m',n:'Tamar Makower',b:'1975',d:'',l:'Israel',g:'F',gen:7,p1:'yacob_m',p2:'ofra',sp:''},
+  {id:'omri',n:'Omri Makower',b:'1980',d:'',l:'Vaughan,ON,Canada',g:'M',gen:7,p1:'yacob_m',p2:'ofra',sp:''},
+  {id:'yuval',n:'Yuval Makower',b:'1985',d:'',l:'Closter,NJ,USA',g:'M',gen:7,p1:'yacob_m',p2:'ofra',sp:''},
   {id:'ori_m',n:'Ori Makower',b:'1985',d:'',l:'Israel',g:'M',gen:7,p1:'ilan',p2:'vardit',sp:''},
   {id:'eran',n:'Eran Makower',b:'1990',d:'',l:'Israel',g:'M',gen:7,p1:'ilan',p2:'vardit',sp:''},
   {id:'nadav',n:'Nadav Yakoby',b:'1992',d:'',l:'Israel',g:'M',gen:7,p1:'uri_ya',p2:'esther_p',sp:''},
@@ -355,17 +427,7 @@ const P=[
   {id:'maylee',n:'Maylee Sharan',b:'2001',d:'',l:'Israel',g:'F',gen:7,p1:'einat',p2:'hadar',sp:''},
   {id:'ilay',n:'Ilay Levi',b:'1997',d:'',l:'Israel',g:'M',gen:7,p1:'dana',p2:'amir_l',sp:''},
   {id:'tuval',n:'Tuval Levi',b:'2001',d:'',l:'Israel',g:'M',gen:7,p1:'dana',p2:'amir_l',sp:''},
-  {id:'shira',n:'Shira Makower',b:'2007',d:'',l:'Israel',g:'F',gen:8,p1:'uri_m',p2:'hagar',sp:''},
-  {id:'alon',n:'Alon Makower',b:'2009',d:'',l:'Israel',g:'M',gen:8,p1:'uri_m',p2:'hagar',sp:''},
-  {id:'rony',n:'Rony Makower',b:'2013',d:'',l:'Israel',g:'F',gen:8,p1:'uri_m',p2:'hagar',sp:''},
-  {id:'yotam',n:'Yotam Makower',b:'2015',d:'',l:'Israel',g:'M',gen:8,p1:'uri_m',p2:'hagar',sp:''},
-  {id:'omer',n:'Omer Zohar',b:'2006',d:'',l:'Magal, Israel',g:'M',gen:8,p1:'tamar_m',p2:'gal',sp:''},
-  {id:'yaara',n:'Yaara Zohar',b:'2008',d:'',l:'Magal, Israel',g:'F',gen:8,p1:'tamar_m',p2:'gal',sp:''},
-  {id:'roy',n:'Roy Zohar',b:'2011',d:'',l:'Magal, Israel',g:'M',gen:8,p1:'tamar_m',p2:'gal',sp:''},
-  {id:'avigail',n:'Avigail Makower',b:'2013',d:'',l:'Toronto, Canada',g:'F',gen:8,p1:'omri',p2:'shawna',sp:''},
-  {id:'adele',n:'Adele Makower',b:'2024',d:'',l:'Toronto, Canada',g:'F',gen:8,p1:'omri',p2:'shawna',sp:''},
-  {id:'itay',n:'Itay Makower',b:'2019',d:'',l:'New Jersey, USA',g:'M',gen:8,p1:'yuval',p2:'tair',sp:''},
-  {id:'ilan_l',n:'Ilan Makower',b:'2022',d:'',l:'New Jersey, USA',g:'M',gen:8,p1:'yuval',p2:'tair',sp:''},
+
 ];
 const BC={
   // Gen 4 branches (children of David)
@@ -399,7 +461,7 @@ function gc(id,g){const s=HL.has(id)?'h':DC.has(id)?'d':'l';const f={h:{M:'#CDD0
 function gbc(pid){let c=idMap[pid];if(!c)return'#999';for(let i=0;i<10;i++){if(BC[c.id])return BC[c.id];const p=c.p1&&idMap[c.p1]||c.p2&&idMap[c.p2];if(p)c=p;else break;}return'#777';}
 const BR={tanchum:new Set(['tanchum','gila','yigal','naomi','orit','yitzchak_f','ofer','carmen','nizan','efrat','dolev','nofar','gil','daniel','tal_y','noah','maya']),baruch:new Set(['baruch','lea','hadassah_b','bracha']),isaac:new Set(['isaac_y','hinda','alexander','rachel_l','ada','amir_m','adina','yacob_m','ofra','ilan','vardit','tal_m','yaniv','eyal','uri_m','hagar','tamar_m','gal','omri','shawna','yuval','tair','ori_m','eran','shira','alon','rony','yotam','omer','yaara','roy','avigail','adele','itay','ilan_l']),rachel:new Set(['rachel_r','yitschak_b','hadassah_ber']),frieda:new Set(['frieda','yoseph_k','uri_k']),zipora:new Set(['zipora','tanchum_y','menachem','tamar_f','david_y','ester_z','uri_ya','esther_p','einat','hadar','dana','amir_l','osnat','ayelet','yiftach','nadav','reut','yoav','bar','noy','maylee','ilay','tuval']),ester:new Set(['ester_m','ezriel','yacob_by','nirit','ravit','arik','limor','nir','offer','sagi'])};
 const CORE=new Set(['dawid','rachel_f','tanchum_f','zelda','david','hadasa']);
-const GENS=[1,2,3,4,5,6,7,8],BW=148,BH=48,PT=30,PL=52,CW=162,RH=72;
+const GENS=[1,2,3,4,5,6,7],BW=148,BH=48,PT=30,PL=52,CW=162,RH=72;
 let ab='all';
 function tr(s,n){return s&&s.length>n?s.slice(0,n-1)+'…':(s||'');}
 function cpx(filtered){
@@ -746,6 +808,131 @@ function closeMapBtn() {
 
 // Close on Escape
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMapBtn(); });
+
+// ── RELATIONSHIP FINDER ──────────────────────────────────────────
+let relP1 = null, relP2 = null, relClickMode = null;
+
+function relSearch(n, q) {
+  const drop = document.getElementById('rel-drop-' + n);
+  if (!q.trim()) { drop.classList.remove('open'); drop.innerHTML = ''; return; }
+  const matches = P.filter(p => p.n.toLowerCase().includes(q.toLowerCase())).slice(0, 10);
+  if (!matches.length) { drop.classList.remove('open'); return; }
+  drop.innerHTML = matches.map(p =>
+    `<div class="rel-drop-item" onmousedown="pickRelPerson(${n},'${p.id}')">${p.n} <span style="color:var(--faint);font-size:11px">Gen ${p.gen}</span></div>`
+  ).join('');
+  drop.classList.add('open');
+}
+
+function pickRelPerson(n, id) {
+  const p = idMap[id];
+  if (!p) return;
+  if (n === 1) { relP1 = id; document.getElementById('rel-search-1').value = p.n; }
+  else { relP2 = id; document.getElementById('rel-search-2').value = p.n; }
+  document.getElementById('rel-drop-' + n).classList.remove('open');
+  updateRelBtn();
+}
+
+function updateRelBtn() {
+  document.getElementById('rel-find-btn').disabled = !(relP1 && relP2);
+}
+
+function resetRel() {
+  relP1 = null; relP2 = null;
+  document.getElementById('rel-search-1').value = '';
+  document.getElementById('rel-search-2').value = '';
+  document.getElementById('rel-drop-1').classList.remove('open');
+  document.getElementById('rel-drop-2').classList.remove('open');
+  document.getElementById('rel-result-bar').classList.remove('visible');
+  document.getElementById('rel-result-bar').innerHTML = '';
+  document.querySelectorAll('.nc').forEach(el => { el.classList.remove('path-highlight','path-dim'); });
+  updateRelBtn();
+}
+
+// BFS to find shortest path between two people (via parent/spouse/child links)
+function bfsPath(startId, endId) {
+  if (startId === endId) return [startId];
+  const visited = new Map(); // id -> parent id
+  visited.set(startId, null);
+  const queue = [startId];
+  const neighbors = id => {
+    const p = idMap[id]; if (!p) return [];
+    const nb = [];
+    if (p.p1 && idMap[p.p1]) nb.push(p.p1);
+    if (p.p2 && idMap[p.p2]) nb.push(p.p2);
+    if (p.sp && idMap[p.sp]) nb.push(p.sp);
+    P.forEach(c => { if (c.p1 === id || c.p2 === id) nb.push(c.id); });
+    return nb;
+  };
+  while (queue.length) {
+    const cur = queue.shift();
+    for (const nb of neighbors(cur)) {
+      if (!visited.has(nb)) {
+        visited.set(nb, cur);
+        if (nb === endId) {
+          const path = [];
+          let c = nb;
+          while (c !== null) { path.unshift(c); c = visited.get(c); }
+          return path;
+        }
+        queue.push(nb);
+      }
+    }
+  }
+  return null;
+}
+
+function describeRelationship(path) {
+  if (!path || path.length === 0) return 'Unknown relationship';
+  if (path.length === 1) return 'Same person';
+  if (path.length === 2) {
+    const a = idMap[path[0]], b = idMap[path[1]];
+    if (a.sp === b.id || b.sp === a.id) return 'Spouses';
+    if (b.p1 === a.id || b.p2 === a.id) return (a.g === 'M' ? 'Father' : 'Mother') + ' and ' + (b.g === 'M' ? 'son' : 'daughter');
+    if (a.p1 === b.id || a.p2 === b.id) return (b.g === 'M' ? 'Father' : 'Mother') + ' and ' + (a.g === 'M' ? 'son' : 'daughter');
+  }
+  // Find common ancestor by looking at the path
+  const a = idMap[path[0]], b = idMap[path[path.length-1]];
+  const steps = path.length - 1;
+  if (steps === 2) return 'Siblings (or half-siblings)';
+  if (steps === 3) return 'Uncle/Aunt and Niece/Nephew';
+  if (steps === 4) return '1st Cousins';
+  if (steps === 5) return '1st Cousins once removed';
+  if (steps === 6) return '2nd Cousins';
+  return `${steps} degrees of separation`;
+}
+
+function findRelationship() {
+  if (!relP1 || !relP2) return;
+  const path = bfsPath(relP1, relP2);
+  const bar = document.getElementById('rel-result-bar');
+  if (!path) {
+    bar.innerHTML = '❌ No relationship path found between these two people.';
+    bar.classList.add('visible');
+    return;
+  }
+  const rel = describeRelationship(path);
+  const names = path.map(id => `<strong>${idMap[id].n}</strong>`).join(' → ');
+  bar.innerHTML = `<strong>${idMap[relP1].n}</strong> ↔ <strong>${idMap[relP2].n}</strong>: ${rel} &nbsp;|&nbsp; Path (${path.length - 1} step${path.length !== 2 ? 's' : ''}): ${names}`;
+  bar.classList.add('visible');
+  // Highlight path on tree
+  const pathSet = new Set(path);
+  document.querySelectorAll('.nc').forEach(el => {
+    if (pathSet.has(el.dataset.id)) {
+      el.classList.add('path-highlight');
+      el.classList.remove('path-dim');
+    } else {
+      el.classList.add('path-dim');
+      el.classList.remove('path-highlight');
+    }
+  });
+}
+
+// Close dropdowns on outside click
+document.addEventListener('click', e => {
+  if (!e.target.closest('.rel-search-wrap')) {
+    document.querySelectorAll('.rel-dropdown').forEach(d => d.classList.remove('open'));
+  }
+});
 
 buildTree();
 doSearch();

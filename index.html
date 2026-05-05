@@ -819,6 +819,7 @@ function closeMapBtn() {
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMapBtn(); });
 
 // ── RELATIONSHIP FINDER ──────────────────────────────────────────
+// ── RELATIONSHIP FINDER ──────────────────────────────────────────
 let relP1 = null, relP2 = null, relClickMode = null;
 
 function relSearch(n, q) {
@@ -857,21 +858,23 @@ function resetRel() {
   updateRelBtn();
 }
 
-// BFS to find shortest path between two people (via parent/spouse/child links)
+// ── BFS PATH (kept for visualization only) ───────────────────────
 function bfsPath(startId, endId) {
   if (startId === endId) return [startId];
-  const visited = new Map(); // id -> parent id
+  const visited = new Map();
   visited.set(startId, null);
   const queue = [startId];
+
   const neighbors = id => {
     const p = idMap[id]; if (!p) return [];
     const nb = [];
     if (p.p1 && idMap[p.p1]) nb.push(p.p1);
     if (p.p2 && idMap[p.p2]) nb.push(p.p2);
-    if (p.sp && idMap[p.sp]) nb.push(p.sp);
+    if (p.sp && idMap[p.sp]) nb.push(p.sp); // kept for visual path
     P.forEach(c => { if (c.p1 === id || c.p2 === id) nb.push(c.id); });
     return nb;
   };
+
   while (queue.length) {
     const cur = queue.shift();
     for (const nb of neighbors(cur)) {
@@ -890,40 +893,116 @@ function bfsPath(startId, endId) {
   return null;
 }
 
-function describeRelationship(path) {
-  if (!path || path.length === 0) return 'Unknown relationship';
-  if (path.length === 1) return 'Same person';
-  if (path.length === 2) {
-    const a = idMap[path[0]], b = idMap[path[1]];
-    if (a.sp === b.id || b.sp === a.id) return 'Spouses';
-    if (b.p1 === a.id || b.p2 === a.id) return (a.g === 'M' ? 'Father' : 'Mother') + ' and ' + (b.g === 'M' ? 'son' : 'daughter');
-    if (a.p1 === b.id || a.p2 === b.id) return (b.g === 'M' ? 'Father' : 'Mother') + ' and ' + (a.g === 'M' ? 'son' : 'daughter');
+// ── NEW: ancestor mapping ────────────────────────────────────────
+function getAncestors(id) {
+  const map = new Map(); // ancestorId -> distance
+  const queue = [{ id, d: 0 }];
+
+  while (queue.length) {
+    const { id: cur, d } = queue.shift();
+    if (map.has(cur)) continue;
+    map.set(cur, d);
+
+    const p = idMap[cur];
+    if (!p) continue;
+
+    if (p.p1) queue.push({ id: p.p1, d: d + 1 });
+    if (p.p2) queue.push({ id: p.p2, d: d + 1 });
   }
-  // Find common ancestor by looking at the path
-  const a = idMap[path[0]], b = idMap[path[path.length-1]];
-  const steps = path.length - 1;
-  if (steps === 2) return 'Siblings (or half-siblings)';
-  if (steps === 3) return 'Uncle/Aunt and Niece/Nephew';
-  if (steps === 4) return '1st Cousins';
-  if (steps === 5) return '1st Cousins once removed';
-  if (steps === 6) return '2nd Cousins';
-  return `${steps} degrees of separation`;
+
+  return map;
 }
 
+// ── FIXED RELATIONSHIP LOGIC ─────────────────────────────────────
+function describeRelationship(path) {
+  if (!path || path.length === 0) return 'Unknown relationship';
+
+  const aId = path[0];
+  const bId = path[path.length - 1];
+
+  if (aId === bId) return 'Same person';
+
+  const a = idMap[aId];
+  const b = idMap[bId];
+
+  // Direct relationships
+  if (a.sp === b.id || b.sp === a.id) return 'Spouses';
+
+  if (b.p1 === a.id || b.p2 === a.id)
+    return (a.g === 'M' ? 'Father' : 'Mother');
+
+  if (a.p1 === b.id || a.p2 === b.id)
+    return (b.g === 'M' ? 'Father' : 'Mother');
+
+  // Ancestors
+  const aAnc = getAncestors(aId);
+  const bAnc = getAncestors(bId);
+
+  let best = null;
+
+  for (const [anc, da] of aAnc.entries()) {
+    if (bAnc.has(anc)) {
+      const db = bAnc.get(anc);
+      const score = da + db;
+      if (!best || score < best.score) {
+        best = { anc, da, db, score };
+      }
+    }
+  }
+
+  if (!best) return 'Unrelated';
+
+  const { da, db } = best;
+
+  // Siblings
+  if (da === 1 && db === 1) return 'Siblings';
+
+  // Direct ancestor/descendant
+  if (da === 0) return db === 1 ? 'Child' : 'Descendant';
+  if (db === 0) return da === 1 ? 'Parent' : 'Ancestor';
+
+  // Cousins
+  const cousinLevel = Math.min(da, db) - 1;
+  const removed = Math.abs(da - db);
+
+  if (cousinLevel === 0) {
+    return removed === 0
+      ? 'Siblings'
+      : 'Aunt/Uncle ↔ Niece/Nephew';
+  }
+
+  const labels = ['1st', '2nd', '3rd', '4th', '5th'];
+  let label = cousinLevel <= labels.length
+    ? `${labels[cousinLevel - 1]} cousin`
+    : `${cousinLevel}th cousin`;
+
+  if (removed === 0) return label;
+  if (removed === 1) return `${label} once removed`;
+  if (removed === 2) return `${label} twice removed`;
+
+  return `${label} ${removed} times removed`;
+}
+
+// ── MAIN ────────────────────────────────────────────────────────
 function findRelationship() {
   if (!relP1 || !relP2) return;
+
   const path = bfsPath(relP1, relP2);
   const bar = document.getElementById('rel-result-bar');
+
   if (!path) {
     bar.innerHTML = '❌ No relationship path found between these two people.';
     bar.classList.add('visible');
     return;
   }
+
   const rel = describeRelationship(path);
   const names = path.map(id => `<strong>${idMap[id].n}</strong>`).join(' → ');
+
   bar.innerHTML = `<strong>${idMap[relP1].n}</strong> ↔ <strong>${idMap[relP2].n}</strong>: ${rel} &nbsp;|&nbsp; Path (${path.length - 1} step${path.length !== 2 ? 's' : ''}): ${names}`;
   bar.classList.add('visible');
-  // Highlight path on tree
+
+  // Highlight path
   const pathSet = new Set(path);
   document.querySelectorAll('.nc').forEach(el => {
     if (pathSet.has(el.dataset.id)) {

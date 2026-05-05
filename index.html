@@ -464,7 +464,11 @@ const BIO_LINKS={
   'tanchum':'https://rishonim.org.il/telmond/info/founder_show.aspx?id=112503',
   'gila':'https://www.rishonim.org.il/telmond/info/founder_show.aspx?id=112502',
   'tanchum_y':'https://www.rishonim.org.il/telmond/show_item.asp?levelId=45275&itemId=7998&itemType=6001',
-  'zipora':'https://www.rishonim.org.il/telmond/show_item.asp?levelId=45275&itemId=7998&itemType=6001'
+  'zipora':'https://www.rishonim.org.il/telmond/show_item.asp?levelId=45275&itemId=7998&itemType=6001',
+  'menachem': 'https://time--capsule.wixsite.com/cfar-hess/%D7%9E%D7%A0%D7%97%D7%9D-%D7%99%D7%A2%D7%A7%D7%91%D7%99',
+  'tamar_f': 'https://time--capsule.wixsite.com/cfar-hess/%D7%AA%D7%9E%D7%A8-%D7%99%D7%A2%D7%A7%D7%91%D7%99',
+  'david_y': 'https://time--capsule.wixsite.com/cfar-hess/%D7%93%D7%95%D7%93-%D7%99%D7%A2%D7%A7%D7%91%D7%99',
+  
 };
 function gc(id,g){const s=HL.has(id)?'h':DC.has(id)?'d':'l';const f={h:{M:'#CDD0E8',F:'#E8CDD6'},d:{M:'#C8DCF0',F:'#F0C8DC'},l:{M:'#D6EAF8',F:'#FAD6EA'}};const k={h:{M:'#5B3A8A',F:'#8A2040'},d:{M:'#1B5E7A',F:'#8B3060'},l:{M:'#3B8BD4',F:'#D45389'}};return{fill:f[s][g],stroke:k[s][g]};}
 function gbc(pid){let c=idMap[pid];if(!c)return'#999';for(let i=0;i<10;i++){if(BC[c.id])return BC[c.id];const p=c.p1&&idMap[c.p1]||c.p2&&idMap[c.p2];if(p)c=p;else break;}return'#777';}

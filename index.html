@@ -149,6 +149,36 @@ body.selecting-p1 .nc, body.selecting-p2 .nc { cursor:crosshair !important; }
 #map-path-info .path-stop{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:4px 12px;font-size:13px;white-space:nowrap;}
 #map-path-info .path-arrow{color:var(--gold);font-size:16px;font-weight:700;}
 #map-path-info .path-note{font-size:12px;color:var(--muted);margin-top:6px;font-style:italic;}
+
+/* ── PERSON INFO MODAL ── */
+#info-overlay{position:fixed;inset:0;background:rgba(20,18,14,.65);z-index:1000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(3px);}
+#info-overlay.open{display:flex;}
+#info-modal{background:var(--surface);border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.3);width:min(520px,95vw);max-height:90vh;display:flex;flex-direction:column;overflow:hidden;border:1px solid var(--border);}
+#info-modal-header{padding:16px 20px;border-bottom:1px solid var(--border2);display:flex;align-items:flex-start;justify-content:space-between;flex-shrink:0;gap:12px;}
+#info-modal-photo{width:72px;height:72px;border-radius:50%;object-fit:cover;border:2px solid var(--border);flex-shrink:0;cursor:pointer;transition:opacity .15s;}
+#info-modal-photo:hover{opacity:.85;}
+#info-modal-photo-placeholder{width:72px;height:72px;border-radius:50%;background:var(--surface2);border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;color:var(--faint);}
+#info-modal-title{flex:1;}
+#info-modal-title h3{font-family:var(--font-d);font-size:20px;font-weight:600;color:var(--accent);margin-bottom:3px;}
+#info-modal-title .info-subtitle{font-size:13px;color:var(--muted);font-style:italic;}
+#info-close{width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:var(--bg);cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;color:var(--muted);flex-shrink:0;}
+#info-close:hover{background:var(--border2);}
+#info-modal-body{padding:18px 20px;overflow-y:auto;flex:1;}
+.info-row{display:flex;gap:8px;margin-bottom:10px;font-size:14.5px;line-height:1.6;align-items:baseline;}
+.info-label{color:var(--faint);font-size:12px;min-width:80px;flex-shrink:0;font-style:italic;}
+.info-value{color:var(--text);flex:1;}
+.info-divider{border:none;border-top:1px solid var(--border2);margin:12px 0;}
+#info-modal-footer{padding:12px 20px;border-top:1px solid var(--border2);display:flex;gap:8px;flex-wrap:wrap;flex-shrink:0;background:var(--surface2);}
+.info-btn{padding:7px 16px;border-radius:8px;border:1px solid var(--border);background:var(--bg);cursor:pointer;font-family:var(--font-b);font-size:13px;color:var(--muted);transition:all .14s;display:flex;align-items:center;gap:5px;}
+.info-btn:hover{background:var(--border2);}
+.info-btn.primary{background:var(--accent);color:#fff;border-color:var(--accent);}
+.info-btn.primary:hover{opacity:.88;}
+/* Photo lightbox */
+#photo-lightbox{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:2000;display:none;align-items:center;justify-content:center;cursor:zoom-out;}
+#photo-lightbox.open{display:flex;}
+#photo-lightbox img{max-width:min(600px,92vw);max-height:88vh;border-radius:10px;box-shadow:0 10px 40px rgba(0,0,0,.6);object-fit:contain;}
+#photo-lightbox-close{position:fixed;top:18px;right:22px;color:#fff;font-size:28px;cursor:pointer;opacity:.7;line-height:1;}
+#photo-lightbox-close:hover{opacity:1;}
 </style>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -532,7 +562,7 @@ function buildTree(){
     const textW  = hasPhoto ? BW - (photoR*2 + 20) : BW;
     const textCX = hasPhoto ? x + photoR*2 + 16 + textW/2 : cx + 2;
     const clipId = 'clip_' + p.id;
-    s+=`<g class="nc" data-id="${p.id}" onclick="openMap('${p.id}')">
+    s+=`<g class="nc" data-id="${p.id}" onclick="openPersonInfo('${p.id}')">
       <rect x="${x}" y="${y}" width="${BW}" height="${BH}" rx="6" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>
       <rect x="${x}" y="${y}" width="4" height="${BH}" rx="2" fill="${acc}" opacity="0.65"/>
       ${hasPhoto ? `
@@ -551,6 +581,10 @@ function buildTree(){
         <rect x="${x+BW-20}" y="${y+2}" width="18" height="16" rx="4" fill="${acc}" opacity="0.85"/>
         <text font-size="10" fill="#fff" x="${x+BW-11}" y="${y+13}" text-anchor="middle" dominant-baseline="central">🔗</text>
       </g>` : ''}
+      <g class="map-link-btn" onclick="event.stopPropagation();openMap('${p.id}')" style="cursor:pointer" title="Migration Map">
+        <rect x="${x+2}" y="${y+BH-18}" width="18" height="16" rx="4" fill="${acc}" opacity="0.7"/>
+        <text font-size="10" fill="#fff" x="${x+11}" y="${y+BH-7}" text-anchor="middle" dominant-baseline="central">🗺</text>
+      </g>
     </g>`;
   });
   s+='</svg>';document.getElementById('tree-wrap').innerHTML=s;
@@ -1026,6 +1060,108 @@ document.addEventListener('click', e => {
   }
 });
 
+
+// ── PERSON INFO MODAL ────────────────────────────────────────────
+let currentInfoId = null;
+
+function openPersonInfo(id) {
+  const p = idMap[id];
+  if (!p) return;
+  currentInfoId = id;
+
+  // Name & subtitle
+  document.getElementById('info-name').textContent = p.n;
+  const genderLabel = p.g === 'M' ? '♂ Male' : '♀ Female';
+  const statusLabel = p.d === 'Holocaust' ? '· Holocaust victim' : p.d ? '· Deceased' : '· Living';
+  document.getElementById('info-subtitle').textContent = `Gen ${p.gen} · ${genderLabel} ${statusLabel}`;
+
+  // Photo
+  const photoUrl = PHOTOS[id] || '';
+  const photoWrap = document.getElementById('info-modal-photo-wrap');
+  if (photoUrl) {
+    photoWrap.innerHTML = `<img id="info-modal-photo" src="${photoUrl}" alt="${p.n}" onclick="openPhotoLightbox()" title="Click to enlarge">`;
+    document.getElementById('info-photo-btn').style.display = 'flex';
+  } else {
+    const emoji = p.g === 'M' ? '👤' : '👤';
+    photoWrap.innerHTML = `<div id="info-modal-photo-placeholder">${emoji}</div>`;
+    document.getElementById('info-photo-btn').style.display = 'none';
+  }
+
+  // Bio link
+  const bioUrl = BIO_LINKS[id] || '';
+  const bioBtn = document.getElementById('info-bio-btn');
+  bioBtn.style.display = bioUrl ? 'flex' : 'none';
+
+  // Build info fields
+  const p1 = p.p1 && idMap[p.p1];
+  const p2 = p.p2 && idMap[p.p2];
+  const spouse = p.sp && idMap[p.sp];
+  const children = P.filter(c => c.p1 === p.id || c.p2 === p.id);
+
+  let rows = '';
+  const row = (label, value) => value ? `<div class="info-row"><span class="info-label">${label}</span><span class="info-value">${value}</span></div>` : '';
+
+  rows += row('Born', p.b || '—');
+  rows += row('Died', p.d || (p.b ? 'Living' : '—'));
+  rows += row('Location', p.l || '—');
+
+  if (p1 || p2) {
+    const parentNames = [p1?.n, p2?.n].filter(Boolean).join(' & ');
+    rows += row('Parents', parentNames);
+  }
+
+  if (spouse) {
+    rows += row('Spouse', spouse.n);
+  }
+
+  if (children.length) {
+    rows += `<hr class="info-divider">`;
+    rows += row('Children', children.map(c => c.n).join(', '));
+  }
+
+  document.getElementById('info-fields').innerHTML = rows;
+  document.getElementById('info-overlay').classList.add('open');
+}
+
+function closeInfoOverlay(e) {
+  if (e.target === document.getElementById('info-overlay')) closeInfo();
+}
+
+function closeInfo() {
+  document.getElementById('info-overlay').classList.remove('open');
+  currentInfoId = null;
+}
+
+function openMapFromInfo() {
+  if (!currentInfoId) return;
+  closeInfo();
+  openMap(currentInfoId);
+}
+
+function openBioLink() {
+  const url = BIO_LINKS[currentInfoId];
+  if (url) window.open(url, '_blank');
+}
+
+function openPhotoLightbox() {
+  if (!currentInfoId) return;
+  const url = PHOTOS[currentInfoId];
+  if (!url) return;
+  document.getElementById('photo-lightbox-img').src = url;
+  document.getElementById('photo-lightbox').classList.add('open');
+}
+
+function closePhotoLightbox() {
+  document.getElementById('photo-lightbox').classList.remove('open');
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closePhotoLightbox();
+    closeInfo();
+  }
+});
+
 buildTree();
 doSearch();
 </script>
@@ -1048,6 +1184,33 @@ doSearch();
       <div class="path-note" id="path-note"></div>
     </div>
   </div>
+</div>
+
+<!-- ── PERSON INFO MODAL ── -->
+<div id="info-overlay" onclick="closeInfoOverlay(event)">
+  <div id="info-modal">
+    <div id="info-modal-header">
+      <div id="info-modal-photo-wrap"></div>
+      <div id="info-modal-title">
+        <h3 id="info-name"></h3>
+        <div class="info-subtitle" id="info-subtitle"></div>
+      </div>
+      <button id="info-close" onclick="closeInfo()">&#x2715;</button>
+    </div>
+    <div id="info-modal-body">
+      <div id="info-fields"></div>
+    </div>
+    <div id="info-modal-footer">
+      <button class="info-btn" id="info-photo-btn" onclick="openPhotoLightbox()" style="display:none">📷 View Photo</button>
+      <button class="info-btn" id="info-bio-btn" onclick="openBioLink()" style="display:none">🔗 Biography</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── PHOTO LIGHTBOX ── -->
+<div id="photo-lightbox" onclick="closePhotoLightbox()">
+  <span id="photo-lightbox-close" onclick="closePhotoLightbox()">&#x2715;</span>
+  <img id="photo-lightbox-img" src="" alt="">
 </div>
 </body>
 </html>
